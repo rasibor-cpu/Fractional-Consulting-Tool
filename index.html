@@ -1,1 +1,176 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fractional Consulting Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #fbbf24;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    button {
+      padding: 10px;
+      background: #fbbf24;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .output {
+      background: #020617;
+      padding: 10px;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Fractional Consulting Diagnostic Tool</h1>
+
+<div class="card">
+  <h3>Client Info</h3>
+
+  <input id="client" placeholder="Client Name">
+  <input id="industry" placeholder="Industry">
+  <input id="consultant" placeholder="Consultant Name">
+
+  <textarea id="overview" placeholder="Business Overview"></textarea>
+</div>
+
+<div class="card">
+  <h3>Key Assessment</h3>
+
+  <label>Are financials up to date?</label>
+  <select id="fin">
+    <option>No issue</option>
+    <option>Minor issue</option>
+    <option>Major issue</option>
+  </select>
+
+  <textarea id="fin_notes" placeholder="Notes"></textarea>
+
+  <label>Revenue leakage?</label>
+  <select id="rev">
+    <option>No issue</option>
+    <option>Minor issue</option>
+    <option>Major issue</option>
+  </select>
+
+  <textarea id="rev_notes" placeholder="Notes"></textarea>
+
+  <label>Operational inefficiencies?</label>
+  <select id="ops">
+    <option>No issue</option>
+    <option>Minor issue</option>
+    <option>Major issue</option>
+  </select>
+
+  <textarea id="ops_notes" placeholder="Notes"></textarea>
+</div>
+
+<div class="card">
+  <button onclick="generate()">Generate Report</button>
+</div>
+
+<div class="card">
+  <h3>Report Output</h3>
+  <div id="output" class="output"></div>
+</div>
+
+<script>
+
+function generate() {
+
+  let client = document.getElementById("client").value;
+  let industry = document.getElementById("industry").value;
+  let consultant = document.getElementById("consultant").value;
+  let overview = document.getElementById("overview").value;
+
+  let fin = document.getElementById("fin").value;
+  let fin_notes = document.getElementById("fin_notes").value;
+
+  let rev = document.getElementById("rev").value;
+  let rev_notes = document.getElementById("rev_notes").value;
+
+  let ops = document.getElementById("ops").value;
+  let ops_notes = document.getElementById("ops_notes").value;
+
+  let issues = 0;
+
+  if (fin !== "No issue") issues++;
+  if (rev !== "No issue") issues++;
+  if (ops !== "No issue") issues++;
+
+  let rating = "Stable";
+
+  if (issues >= 2) rating = "Moderate";
+  if (issues >= 3) rating = "Critical";
+
+  let report = `
+CLIENT: ${client}
+INDUSTRY: ${industry}
+CONSULTANT: ${consultant}
+
+OVERVIEW:
+${overview}
+
+---
+
+FINDINGS:
+
+Financials: ${fin}
+Notes: ${fin_notes}
+
+Revenue: ${rev}
+Notes: ${rev_notes}
+
+Operations: ${ops}
+Notes: ${ops_notes}
+
+---
+
+TOTAL ISSUES: ${issues}
+RISK LEVEL: ${rating}
+
+---
+
+RECOMMENDATION:
+Implement structured financial control, tighten revenue capture, and optimize operational workflows.
+`;
+
+  document.getElementById("output").innerText = report;
+}
+
+</script>
+
+</body>
+</html>
