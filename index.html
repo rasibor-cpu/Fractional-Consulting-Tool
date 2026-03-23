@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractional Consulting Tool</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#0b1220;
+  color:white;
+  margin:0;
+  padding:20px;
+}
+
+h1{color:#f59e0b;}
+
+.card{
+  background:#111827;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:1px solid #374151;
+}
+
+label{font-weight:bold; display:block; margin-top:10px;}
+
+input,select,textarea{
+  width:100%;
+  padding:8px;
+  margin-top:5px;
+  background:#020617;
+  color:white;
+  border:1px solid #475569;
+  border-radius:6px;
+}
+
+button{
+  margin-top:15px;
+  padding:10px;
+  background:#f59e0b;
+  border:none;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.report{
+  white-space:pre-wrap;
+  background:black;
+  padding:15px;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Fractional Consulting Diagnostic Tool</h1>
+
+<div class="card">
+
+<label>Client Name</label>
+<input id="clientName">
+
+<label>Industry</label>
+<select id="industry" onchange="loadQuestions()">
+<option value="">Select</option>
+<option value="hospitality">Hospitality</option>
+<option value="legal">Legal</option>
+<option value="retail">Retail</option>
+<option value="healthcare">Healthcare</option>
+<option value="construction">Construction</option>
+<option value="technology">Technology</option>
+</select>
+
+<label>Business Stage</label>
+<select id="stage">
+<option>Startup</option>
+<option>Growth</option>
+<option>Established</option>
+<option>Distressed</option>
+</select>
+
+</div>
+
+<div class="card">
+<h3>Core Questions</h3>
+
+<label>Financial Control Strength</label>
+<select id="q1">
+<option value="5">Strong</option>
+<option value="3">Average</option>
+<option value="1">Weak</option>
+</select>
+
+<label>Operational Efficiency</label>
+<select id="q2">
+<option value="5">Strong</option>
+<option value="3">Average</option>
+<option value="1">Weak</option>
+</select>
+
+<label>Sales Effectiveness</label>
+<select id="q3">
+<option value="5">Strong</option>
+<option value="3">Average</option>
+<option value="1">Weak</option>
+</select>
+
+</div>
+
+<div class="card">
+<h3>Industry Questions</h3>
+<div id="industryQuestions"></div>
+</div>
+
+<button onclick="generate()">Generate Report</button>
+
+<div class="card">
+<h3>Report</h3>
+<div id="report" class="report"></div>
+</div>
+
+<script>
+
+const industryData = {
+
+hospitality:[
+"How well is occupancy tracked?",
+"How controlled is food cost?"
+],
+
+legal:[
+"How well are billable hours tracked?",
+"How strong is document control?"
+],
+
+retail:[
+"How well is inventory controlled?",
+"How strong are POS controls?"
+],
+
+healthcare:[
+"How efficient is patient flow?",
+"How accurate is billing?"
+],
+
+construction:[
+"How controlled are project costs?",
+"How strong is site supervision?"
+],
+
+technology:[
+"How reliable is the system?",
+"How strong is customer retention?"
+]
+
+};
+
+function loadQuestions(){
+  const industry = document.getElementById("industry").value;
+  const container = document.getElementById("industryQuestions");
+
+  if(!industry){
+    container.innerHTML="";
+    return;
+  }
+
+  let questions = industryData[industry];
+
+  container.innerHTML = questions.map((q,i)=>`
+    <label>${q}</label>
+    <select id="iq${i}">
+      <option value="5">Strong</option>
+      <option value="3">Average</option>
+      <option value="1">Weak</option>
+    </select>
+  `).join("");
+}
+
+function avg(arr){
+  return arr.reduce((a,b)=>a+b,0)/arr.length;
+}
+
+function generate(){
+
+  const name = document.getElementById("clientName").value;
+  const industry = document.getElementById("industry").value;
+
+  let scores = [
+    Number(document.getElementById("q1").value),
+    Number(document.getElementById("q2").value),
+    Number(document.getElementById("q3").value)
+  ];
+
+  let industryScores = [];
+
+  for(let i=0;i<5;i++){
+    let el = document.getElementById("iq"+i);
+    if(el) industryScores.push(Number(el.value));
+  }
+
+  let overall = avg(scores.concat(industryScores));
+
+  let verdict = "Moderate";
+
+  if(overall < 2) verdict="Critical";
+  else if(overall < 3.5) verdict="Needs Improvement";
+  else verdict="Strong";
+
+  let report = `
+CLIENT: ${name}
+INDUSTRY: ${industry}
+
+OVERALL SCORE: ${overall.toFixed(2)}
+STATUS: ${verdict}
+
+RECOMMENDATION:
+- Improve controls
+- Strengthen reporting
+- Optimize operations
+`;
+
+  document.getElementById("report").textContent = report;
+}
+
+</script>
+
+</body>
+</html>
