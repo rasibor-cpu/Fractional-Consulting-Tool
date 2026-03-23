@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fractional Consulting Tool - Expanded Granular Version</title>
+  <title>Fractional Consulting Tool - Client Record Upgrade</title>
   <style>
     body{
       font-family: Arial, Helvetica, sans-serif;
@@ -12,12 +12,10 @@
       margin:0;
       padding:20px;
     }
-
     h1,h2,h3{
       color:#f59e0b;
       margin-top:0;
     }
-
     .card{
       background:#111827;
       border:1px solid #374151;
@@ -25,20 +23,17 @@
       padding:16px;
       margin-bottom:16px;
     }
-
     .grid{
       display:grid;
       grid-template-columns:repeat(auto-fit, minmax(260px,1fr));
       gap:14px;
     }
-
     label{
       display:block;
       font-weight:bold;
       margin-top:10px;
       margin-bottom:6px;
     }
-
     input, select, textarea{
       width:100%;
       padding:10px;
@@ -49,12 +44,10 @@
       box-sizing:border-box;
       font-size:14px;
     }
-
     textarea{
       min-height:90px;
       resize:vertical;
     }
-
     button{
       margin-top:14px;
       margin-right:10px;
@@ -66,11 +59,17 @@
       font-weight:bold;
       cursor:pointer;
     }
-
+    button.secondary{
+      background:#334155;
+      color:#ffffff;
+    }
+    button.danger{
+      background:#b91c1c;
+      color:#ffffff;
+    }
     button:hover{
       opacity:0.92;
     }
-
     .question-block{
       background:#0f172a;
       border:1px solid #334155;
@@ -78,13 +77,11 @@
       padding:12px;
       margin-bottom:12px;
     }
-
     .question-title{
       font-weight:bold;
       margin-bottom:8px;
       line-height:1.45;
     }
-
     .report{
       white-space:pre-wrap;
       background:#020617;
@@ -94,17 +91,46 @@
       min-height:180px;
       line-height:1.6;
     }
-
     .small{
       font-size:12px;
       color:#94a3b8;
     }
-
     .toolbar{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
+    }
+    .client-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+    .client-item{
+      background:#0f172a;
+      border:1px solid #334155;
+      border-radius:8px;
+      padding:12px;
+    }
+    .client-item strong{
+      color:#ffffff;
+    }
+    .client-meta{
+      font-size:12px;
+      color:#94a3b8;
+      margin-top:4px;
+      line-height:1.5;
+    }
+    .client-actions{
+      margin-top:10px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .client-actions button{
+      margin-top:0;
+      padding:8px 12px;
+      font-size:12px;
     }
   </style>
 </head>
@@ -216,7 +242,7 @@
 
   <div class="card">
     <h2>2. Core Diagnostics</h2>
-    <div class="small">Expanded, more inquisitive diagnostics across control, operations, revenue, governance, reporting, staffing, compliance, and customer performance.</div>
+    <div class="small">Expanded diagnostics across control, profitability, operations, governance, reporting, staffing, compliance, and customer performance.</div>
     <div id="coreQuestions" style="margin-top:12px;"></div>
   </div>
 
@@ -247,18 +273,29 @@
     <div class="toolbar">
       <button onclick="generateReport()">Generate Report</button>
       <button onclick="saveClient()">Save Client Record</button>
-      <button onclick="loadClient()">Load Client Record</button>
-      <button onclick="exportClient()">Export Client JSON</button>
-      <button onclick="resetForm()">Clear Form</button>
+      <button onclick="loadClient()">Load Current Reference</button>
+      <button onclick="exportClient()">Export Current JSON</button>
+      <button onclick="resetForm()" class="secondary">Clear Form</button>
       <input type="file" id="importFile" onchange="importClient(event)" />
     </div>
     <div class="small" style="margin-top:12px;">
-      Each client is stored by unique client reference in local storage to reduce cross-contamination between company records.
+      Each client is stored by unique client reference in local storage.
     </div>
   </div>
 
   <div class="card">
-    <h2>6. Generated Report</h2>
+    <h2>6. Saved Client Records</h2>
+    <div class="grid">
+      <div>
+        <label>Search Saved Clients</label>
+        <input id="clientSearch" placeholder="Search by client name, reference, industry, respondent" oninput="renderSavedClients()" />
+      </div>
+    </div>
+    <div id="savedClients" class="client-list"></div>
+  </div>
+
+  <div class="card">
+    <h2>7. Generated Report</h2>
     <div id="report" class="report">Your report will appear here.</div>
   </div>
 
@@ -282,15 +319,9 @@
     ];
 
     const industrySubsectors = {
-      hospitality: [
-        "Hotel","Restaurant","Lounge / Bar","Resort","Event Venue","Catering Services"
-      ],
-      legal: [
-        "Litigation","Corporate / Commercial","Property / Real Estate","Compliance / Regulatory","Tax","Immigration"
-      ],
-      retail: [
-        "Phone Retail","Fashion Retail","Supermarket / Grocery","Pharmacy Retail","Electronics Retail","Auto Parts Retail"
-      ],
+      hospitality: ["Hotel","Restaurant","Lounge / Bar","Resort","Event Venue","Catering Services"],
+      legal: ["Litigation","Corporate / Commercial","Property / Real Estate","Compliance / Regulatory","Tax","Immigration"],
+      retail: ["Phone Retail","Fashion Retail","Supermarket / Grocery","Pharmacy Retail","Electronics Retail","Auto Parts Retail"],
       healthcare: [
         "General Practice","Internal Medicine","Pediatrics","Obstetrics & Gynecology","Surgery","Orthopedics",
         "Cardiology","Neurology","Nephrology","Ophthalmology / Eye Care","ENT","Dental Practice",
@@ -309,38 +340,16 @@
         "SaaS","Software Development","IT Support Services","Cybersecurity","Systems Integration",
         "Telecom Technology","Hardware / Devices","Cloud Services","Data / Analytics","Managed Services"
       ],
-      construction: [
-        "Building Construction","Road / Civil Works","MEP Contracting","Project Management",
-        "Quantity Surveying","Interior Fit-Out"
-      ],
-      education: [
-        "Primary School","Secondary School","College / Tertiary","Training Institute","EdTech","Coaching Center"
-      ],
-      finance: [
-        "Microfinance","Commercial Banking Support","Insurance Brokerage","Investment Advisory","Fintech","Credit / Lending"
-      ],
-      logistics: [
-        "Trucking","Courier Services","Freight Forwarding","Warehouse Operations","Fleet Management","Last-Mile Delivery"
-      ],
-      manufacturing: [
-        "Food Processing","Consumer Goods","Industrial Manufacturing","Chemical Manufacturing","Pharmaceutical Manufacturing",
-        "Packaging","Textile / Garment Manufacturing","Plastics Manufacturing"
-      ],
-      realestate: [
-        "Property Development","Property Management","Real Estate Brokerage","Facility Management","Short-Let / Hospitality Property"
-      ],
-      agriculture: [
-        "Crop Farming","Livestock","Agro-Processing","Poultry","Fisheries","Farm Distribution"
-      ],
-      entertainment: [
-        "Events","Music Production","Film / Media","Content Studio","Talent Management","Venue Operations"
-      ],
-      nonprofit: [
-        "Foundation","Faith-Based Organization","Development NGO","Advocacy NGO","Education NGO","Health NGO"
-      ],
-      professionalservices: [
-        "Accounting Firm","Consulting Firm","Marketing Agency","HR Advisory","Outsourcing Services","Business Support Services"
-      ]
+      construction: ["Building Construction","Road / Civil Works","MEP Contracting","Project Management","Quantity Surveying","Interior Fit-Out"],
+      education: ["Primary School","Secondary School","College / Tertiary","Training Institute","EdTech","Coaching Center"],
+      finance: ["Microfinance","Commercial Banking Support","Insurance Brokerage","Investment Advisory","Fintech","Credit / Lending"],
+      logistics: ["Trucking","Courier Services","Freight Forwarding","Warehouse Operations","Fleet Management","Last-Mile Delivery"],
+      manufacturing: ["Food Processing","Consumer Goods","Industrial Manufacturing","Chemical Manufacturing","Pharmaceutical Manufacturing","Packaging","Textile / Garment Manufacturing","Plastics Manufacturing"],
+      realestate: ["Property Development","Property Management","Real Estate Brokerage","Facility Management","Short-Let / Hospitality Property"],
+      agriculture: ["Crop Farming","Livestock","Agro-Processing","Poultry","Fisheries","Farm Distribution"],
+      entertainment: ["Events","Music Production","Film / Media","Content Studio","Talent Management","Venue Operations"],
+      nonprofit: ["Foundation","Faith-Based Organization","Development NGO","Advocacy NGO","Education NGO","Health NGO"],
+      professionalservices: ["Accounting Firm","Consulting Firm","Marketing Agency","HR Advisory","Outsourcing Services","Business Support Services"]
     };
 
     const subsectorQuestions = {
@@ -374,7 +383,6 @@
         "How efficient are procurement, food prep, logistics, and delivery timing?",
         "How well are spoilage, wastage, event execution quality, and team coordination controlled?"
       ],
-
       "Litigation": [
         "How well are matter timelines, court deadlines, filing obligations, and case workflows tracked?",
         "How efficient are file retrieval, document version control, and matter supervision?",
@@ -405,7 +413,6 @@
         "How efficiently are filing timelines, client updates, and case follow-up handled?",
         "How well are collections, engagement scope, and service turnaround managed?"
       ],
-
       "Phone Retail": [
         "How tightly are inventory, branch transfers, shrinkage, and fast-moving stock controlled?",
         "How strong are accessory upsell, warranty conversion, and branch margin visibility?",
@@ -436,7 +443,6 @@
         "How strong are stock-loss controls, counter-sales discipline, and returns handling?",
         "How well are margins and repeat trade-customer relationships tracked?"
       ],
-
       "General Practice": [
         "How efficiently are consultations, triage, records, and appointment management handled?",
         "How accurate are billing, collections, and treatment documentation?",
@@ -552,7 +558,6 @@
         "How strong are billing controls, insurer reconciliation, and revenue capture?",
         "How well are compliance, incident reporting, and care quality monitored?"
       ],
-
       "Civil Engineering": [
         "How accurately are project costing, BOQ control, and progress billing managed?",
         "How strong are site supervision, milestone tracking, and variation control?",
@@ -653,7 +658,6 @@
         "How strong are project controls, vendor claims management, and budget visibility?",
         "How effectively are delays, overruns, and execution risks managed?"
       ],
-
       "SaaS": [
         "How well are churn, retention, CAC, and recurring revenue visibility managed?",
         "How strong are product uptime, onboarding, support response, and adoption routines?",
@@ -828,7 +832,8 @@
         mediumTerm: document.getElementById("mediumTerm").value.trim(),
         longTerm: document.getElementById("longTerm").value.trim(),
         coreData,
-        subData
+        subData,
+        savedAt: new Date().toISOString()
       };
     }
 
@@ -868,6 +873,8 @@
           if (document.getElementById(`sub_action_${i}`)) document.getElementById(`sub_action_${i}`).value = item.action || "";
         });
       }
+
+      generateReport();
     }
 
     function generateReport() {
@@ -942,6 +949,10 @@ ${data.longTerm || "None entered"}
       document.getElementById("report").textContent = report;
     }
 
+    function getSavedClientKeys() {
+      return Object.keys(localStorage).filter(k => k.startsWith("fct_")).sort();
+    }
+
     function saveClient() {
       const data = collectData();
       if (!data.clientRef) {
@@ -949,6 +960,7 @@ ${data.longTerm || "None entered"}
         return;
       }
       localStorage.setItem(`fct_${data.clientRef}`, JSON.stringify(data));
+      renderSavedClients();
       alert(`Saved client record: ${data.clientRef}`);
     }
 
@@ -967,12 +979,39 @@ ${data.longTerm || "None entered"}
       alert(`Loaded client record: ${clientRef}`);
     }
 
+    function loadClientByRef(clientRef) {
+      const raw = localStorage.getItem(`fct_${clientRef}`);
+      if (!raw) return;
+      populateData(JSON.parse(raw));
+    }
+
+    function deleteClientByRef(clientRef) {
+      if (!confirm(`Delete saved record ${clientRef}?`)) return;
+      localStorage.removeItem(`fct_${clientRef}`);
+      renderSavedClients();
+      if (document.getElementById("clientRef").value === clientRef) {
+        resetForm();
+      }
+    }
+
     function exportClient() {
       const data = collectData();
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = `${data.clientRef || "client-record"}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function exportClientByRef(clientRef) {
+      const raw = localStorage.getItem(`fct_${clientRef}`);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${clientRef}.json`;
       a.click();
       URL.revokeObjectURL(a.href);
     }
@@ -984,6 +1023,9 @@ ${data.longTerm || "None entered"}
       reader.onload = function(e) {
         try {
           const data = JSON.parse(e.target.result);
+          if (!data.clientRef) {
+            data.clientRef = generateClientRef();
+          }
           populateData(data);
           alert("Client file imported successfully.");
         } catch (err) {
@@ -1016,8 +1058,56 @@ ${data.longTerm || "None entered"}
       buildCoreQuestions();
     }
 
+    function renderSavedClients() {
+      const holder = document.getElementById("savedClients");
+      const search = document.getElementById("clientSearch").value.trim().toLowerCase();
+      const keys = getSavedClientKeys();
+
+      const items = keys.map(k => {
+        try {
+          return JSON.parse(localStorage.getItem(k));
+        } catch {
+          return null;
+        }
+      }).filter(Boolean);
+
+      const filtered = items.filter(item => {
+        const hay = [
+          item.clientName || "",
+          item.clientRef || "",
+          item.industry || "",
+          item.subsector || "",
+          item.respondentName || ""
+        ].join(" ").toLowerCase();
+        return hay.includes(search);
+      });
+
+      if (!filtered.length) {
+        holder.innerHTML = `<div class="small">No saved client records found.</div>`;
+        return;
+      }
+
+      holder.innerHTML = filtered.map(item => `
+        <div class="client-item">
+          <strong>${item.clientName || "Unnamed Client"}</strong>
+          <div class="client-meta">
+            Ref: ${item.clientRef || "N/A"}<br>
+            Industry: ${item.industry || "N/A"} | Sub-sector: ${item.subsector || "N/A"}<br>
+            Respondent: ${item.respondentName || "N/A"}<br>
+            Saved: ${item.savedAt ? new Date(item.savedAt).toLocaleString() : "N/A"}
+          </div>
+          <div class="client-actions">
+            <button onclick="loadClientByRef('${item.clientRef}')">Load</button>
+            <button onclick="exportClientByRef('${item.clientRef}')" class="secondary">Export</button>
+            <button onclick="deleteClientByRef('${item.clientRef}')" class="danger">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
     document.getElementById("clientRef").value = generateClientRef();
     buildCoreQuestions();
+    renderSavedClients();
   </script>
 </body>
 </html>
