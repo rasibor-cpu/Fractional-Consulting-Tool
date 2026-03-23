@@ -3,887 +3,1084 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fractional Consulting Pro Tool v3</title>
+  <title>Fractional Consulting Diagnostic Tool</title>
   <style>
     :root{
-      --bg:#020617;
-      --panel:#0f172a;
-      --panel2:#1e293b;
-      --line:#334155;
+      --bg:#0b1220;
+      --panel:#111827;
+      --card:#172033;
+      --line:#2a3754;
       --text:#f8fafc;
       --muted:#cbd5e1;
-      --gold:#fbbf24;
-      --blue:#38bdf8;
-      --green:#22c55e;
-      --red:#ef4444;
+      --soft:#94a3b8;
+      --accent:#f59e0b;
+      --accent2:#fbbf24;
+      --good:#10b981;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --info:#38bdf8;
     }
+
     *{box-sizing:border-box}
-    body{
+
+    html,body{
       margin:0;
-      padding:20px;
+      padding:0;
+      background:linear-gradient(180deg,#020617 0%, #0b1220 100%);
+      color:var(--text);
       font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
     }
-    h1,h2,h3,h4{margin-top:0}
-    h1{color:var(--gold)}
-    .container{max-width:1400px;margin:0 auto}
-    .card{
-      background:var(--panel);
+
+    .container{
+      width:min(1380px,94%);
+      margin:24px auto 60px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#111827,#1e293b);
       border:1px solid var(--line);
-      border-radius:14px;
-      padding:16px;
-      margin-bottom:16px;
+      border-radius:20px;
+      padding:24px;
+      margin-bottom:18px;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
-    .grid{display:grid;gap:14px}
-    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    @media (max-width: 900px){
-      .grid-2,.grid-3{grid-template-columns:1fr}
+
+    .hero h1{
+      margin:0 0 8px 0;
+      font-size:32px;
     }
-    label{
-      display:block;
-      font-weight:700;
-      margin-bottom:6px;
-      color:#fff;
+
+    .hero p{
+      margin:8px 0;
+      line-height:1.55;
+      color:var(--muted);
     }
-    input,select,textarea{
-      width:100%;
-      padding:10px 12px;
-      border-radius:10px;
-      border:1px solid var(--line);
-      background:var(--panel2);
-      color:var(--text);
-      margin-bottom:10px;
-    }
-    textarea{
-      min-height:90px;
-      resize:vertical;
-    }
-    button{
-      padding:12px 16px;
-      border:none;
-      border-radius:10px;
-      background:var(--gold);
-      color:#111827;
-      font-weight:700;
-      cursor:pointer;
-      margin-right:8px;
-      margin-bottom:8px;
-    }
-    button.secondary{
-      background:var(--blue);
-      color:#082f49;
-    }
-    button.success{
-      background:var(--green);
-      color:#052e16;
-    }
-    .kpis{
+
+    .grid{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
+      gap:16px;
     }
-    @media (max-width:900px){
-      .kpis{grid-template-columns:1fr 1fr}
+
+    .grid-2{
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
     }
-    .kpi{
-      background:#111827;
+
+    .grid-3{
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+    }
+
+    .card{
+      background:rgba(17,24,39,.96);
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:12px;
+      border-radius:18px;
+      padding:18px;
+      box-shadow:0 10px 25px rgba(0,0,0,.18);
     }
-    .kpi strong{
-      display:block;
-      font-size:22px;
-      margin-top:6px;
-      color:var(--gold);
-    }
-    .section-box{
-      background:#0b1220;
-      border:1px solid #243041;
-      border-radius:12px;
-      padding:14px;
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid var(--line);
+      padding-bottom:10px;
       margin-bottom:14px;
     }
-    .question-box{
-      background:#111827;
-      border:1px solid #243041;
-      border-radius:12px;
-      padding:14px;
-      margin-top:12px;
+
+    .section-title h2{
+      margin:0;
+      font-size:22px;
     }
-    .question-box h4{
-      color:#fde68a;
-      margin-bottom:8px;
-    }
-    .small{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-    .report{
-      white-space:pre-wrap;
-      background:#020617;
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:14px;
-      line-height:1.6;
-    }
+
     .badge{
       display:inline-block;
       padding:6px 10px;
       border-radius:999px;
       font-size:12px;
       font-weight:700;
-      margin-right:8px;
-      margin-bottom:8px;
-      background:#1e293b;
+      color:#111827;
+      background:var(--accent2);
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--muted);
+    }
+
+    input, select, textarea{
+      width:100%;
+      background:#0a1020;
+      color:#fff;
+      border:1px solid #41506f;
+      border-radius:10px;
+      padding:11px 12px;
+      margin-bottom:12px;
+      font-size:14px;
+    }
+
+    textarea{
+      min-height:90px;
+      resize:vertical;
+    }
+
+    .tiny{
+      font-size:12px;
+      color:var(--soft);
+      margin-top:-6px;
+      margin-bottom:10px;
+      line-height:1.45;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    button{
+      border:none;
+      border-radius:10px;
+      padding:12px 18px;
+      font-weight:700;
+      cursor:pointer;
+      background:var(--accent);
+      color:#111827;
+    }
+
+    button.secondary{
+      background:#334155;
+      color:#fff;
+    }
+
+    button.dark{
+      background:#0f172a;
+      color:#fff;
       border:1px solid var(--line);
     }
-    .title-line{
-      border-bottom:1px solid var(--line);
-      padding-bottom:8px;
-      margin-bottom:12px;
+
+    .question-block{
+      border:1px solid #334155;
+      border-radius:14px;
+      padding:14px;
+      background:#0b1220;
+      margin-bottom:14px;
+    }
+
+    .question-block h4{
+      margin:0 0 8px 0;
+      color:#fff;
+      font-size:16px;
+    }
+
+    .question-text{
+      font-weight:700;
+      margin-bottom:8px;
+      line-height:1.45;
+    }
+
+    .meta{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:10px;
+    }
+
+    .score-box{
+      text-align:center;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#0b1220;
+      padding:16px;
+    }
+
+    .score-box h3{
+      margin:0 0 10px 0;
+      font-size:18px;
+    }
+
+    .big-score{
+      font-size:34px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .good{background:rgba(16,185,129,.18); color:#6ee7b7;}
+    .warn{background:rgba(245,158,11,.18); color:#fcd34d;}
+    .bad{background:rgba(239,68,68,.18); color:#fca5a5;}
+    .info{background:rgba(56,189,248,.18); color:#7dd3fc;}
+
+    .report{
+      white-space:pre-wrap;
+      line-height:1.65;
+      background:#020617;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:18px;
+      min-height:260px;
+      color:#e5e7eb;
+    }
+
+    .small-note{
+      font-size:12px;
+      color:var(--soft);
+      line-height:1.45;
+      margin-top:12px;
+    }
+
+    .hidden{display:none;}
+
+    .summary-list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+
+    @media print{
+      body{
+        background:#fff;
+        color:#000;
+      }
+      .hero,.card,.report,.score-box{
+        background:#fff !important;
+        color:#000 !important;
+        box-shadow:none !important;
+      }
+      input,select,textarea,button,.no-print{
+        display:none !important;
+      }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="card">
-    <h1>Fractional Consulting Pro Tool v3</h1>
-    <div class="small">
-      Industry-aware client intake, diagnostics, scoring, and report generation.
+  <div class="container">
+    <div class="hero">
+      <h1>Fractional Consulting Diagnostic Tool</h1>
+      <p>
+        Structured intake, sector-aware diagnostics, leakage detection, action planning,
+        and report generation for fractional consulting engagements.
+      </p>
+      <p>
+        This build expands the intake logic across major industries so your assessment becomes
+        more relevant to each client's operating environment rather than relying on one generic form.
+      </p>
     </div>
-  </div>
 
-  <div class="card">
-    <h2 class="title-line">1. Client Profile</h2>
-    <div class="grid grid-3">
-      <div>
-        <label>Client Name</label>
-        <input id="clientName" placeholder="e.g. ABC Ltd" />
-      </div>
-      <div>
-        <label>Industry</label>
-        <select id="industrySelect"></select>
-      </div>
-      <div>
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="section-title">
+          <h2>1. Client Profile</h2>
+          <span class="badge">Base Intake</span>
+        </div>
+
+        <label>Client / Company Name</label>
+        <input id="clientName" placeholder="Enter company name" />
+
+        <label>Contact Person</label>
+        <input id="contactPerson" placeholder="Enter contact person" />
+
         <label>Consultant Name</label>
-        <input id="consultantName" placeholder="e.g. Robert Asibor" />
-      </div>
-      <div>
-        <label>Assessment Date</label>
-        <input id="assessmentDate" type="date" />
-      </div>
-      <div>
+        <input id="consultantName" placeholder="Enter consultant name" />
+
+        <label>Industry / Sector</label>
+        <select id="industry" onchange="renderIndustryQuestions()">
+          <option value="">Select industry / sector</option>
+          <option value="hospitality">Hospitality</option>
+          <option value="legal">Legal Services</option>
+          <option value="airtravel">Air Travel Services</option>
+          <option value="phoneretail">Phone Retail Products</option>
+          <option value="healthcare">Healthcare / Medical</option>
+          <option value="education">Education</option>
+          <option value="engineering">Engineering Services</option>
+          <option value="construction">Construction / Contracting</option>
+          <option value="entertainment">Entertainment / Creative</option>
+          <option value="manufacturing">Manufacturing</option>
+          <option value="distribution">Distribution / Wholesale</option>
+          <option value="retailgeneral">General Retail</option>
+          <option value="professionalservices">Professional Services</option>
+          <option value="financialservices">Financial Services</option>
+          <option value="logistics">Logistics / Transport</option>
+          <option value="technology">Technology / Software / IT</option>
+          <option value="telecom">Telecom / Connectivity</option>
+          <option value="realestate">Real Estate / Property</option>
+          <option value="nonprofit">Nonprofit / NGO</option>
+          <option value="agriculture">Agriculture / Agro-Allied</option>
+          <option value="general">General Business</option>
+        </select>
+
+        <label>Sub-Sector / Niche</label>
+        <input id="subSector" placeholder="Example: hotel, airline ticketing, litigation, smartphone accessories, school, clinic, contracting, music production" />
+
+        <label>Business Stage</label>
+        <select id="businessStage">
+          <option>Startup</option>
+          <option>Early Growth</option>
+          <option>Established</option>
+          <option>Plateaued</option>
+          <option>Turnaround / Distressed</option>
+        </select>
+
         <label>Business Size</label>
         <select id="businessSize">
-          <option value="">Select</option>
-          <option>Micro</option>
-          <option>Small</option>
-          <option>Medium</option>
-          <option>Large</option>
-          <option>Enterprise</option>
+          <option>1-10 employees</option>
+          <option>11-25 employees</option>
+          <option>26-50 employees</option>
+          <option>51-100 employees</option>
+          <option>100+ employees</option>
         </select>
+
+        <label>Locations / Branches</label>
+        <input id="locations" placeholder="Enter number of branches / operating locations" />
+
+        <label>Main Reason for Engagement</label>
+        <textarea id="engagementReason" placeholder="Why was the consulting engagement initiated?"></textarea>
       </div>
-      <div>
-        <label>Country / Market</label>
-        <input id="market" placeholder="e.g. Nigeria, Canada, USA" />
-      </div>
-    </div>
-    <label>Business Overview</label>
-    <textarea id="overview" placeholder="Describe the business, operating model, key products/services, number of locations, major constraints, and known issues."></textarea>
-    <button onclick="loadIndustryForm()">Load Industry Assessment</button>
-  </div>
 
-  <div class="card">
-    <h2 class="title-line">2. Industry Guidance</h2>
-    <div id="industryGuidance" class="small">Select an industry and click "Load Industry Assessment".</div>
-  </div>
-
-  <div class="card">
-    <h2 class="title-line">3. Dynamic Intake & Diagnostics</h2>
-    <div id="dynamicSections"></div>
-  </div>
-
-  <div class="card">
-    <h2 class="title-line">4. Additional Findings</h2>
-    <div class="grid grid-2">
-      <div>
-        <label>Additional Question Raised</label>
-        <textarea id="extraQuestion" placeholder="Enter spontaneous question raised during the meeting."></textarea>
-      </div>
-      <div>
-        <label>Observed Response / Issue</label>
-        <textarea id="extraResponse" placeholder="Enter what the client said or what you observed."></textarea>
-      </div>
-    </div>
-    <label>Consultant Red Flags / Commentary</label>
-    <textarea id="redFlags" placeholder="Enter undocumented risks, evasive responses, suspicious practices, concentration risks, control weaknesses, or strategic concerns."></textarea>
-  </div>
-
-  <div class="card">
-    <h2 class="title-line">5. Actions</h2>
-    <button onclick="generateReport()">Generate Report</button>
-    <button class="secondary" onclick="downloadReport()">Download Report</button>
-    <button class="success" onclick="window.print()">Print / Save PDF</button>
-  </div>
-
-  <div class="card">
-    <h2 class="title-line">6. Dashboard</h2>
-    <div class="kpis">
-      <div class="kpi">Total Score<strong id="kpiScore">0</strong></div>
-      <div class="kpi">Issues Identified<strong id="kpiIssues">0</strong></div>
-      <div class="kpi">Risk Level<strong id="kpiRisk">-</strong></div>
-      <div class="kpi">Priority Level<strong id="kpiPriority">-</strong></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2 class="title-line">7. Generated Report</h2>
-    <div id="reportOutput" class="report">Generated report will appear here.</div>
-  </div>
-</div>
-
-<script>
-const INDUSTRY_DATA = {
-  "Retail": {
-    guidance: "Focus on POS integrity, discount abuse, shrinkage, stock reconciliation, returns control, vendor margin erosion, cash handling, and branch performance.",
-    sections: [
-      {
-        title: "Sales & POS Controls",
-        questions: [
-          {
-            label: "Sales reconciliation discipline",
-            prompt: "Are daily sales, POS records, cash receipts, and bankings fully reconciled?",
-            docs: ["Daily sales summary", "POS reports", "Cash book", "Bank deposit slips", "Exception logs"],
-            findings: ["No daily reconciliation", "Delayed reconciliation", "Till variances recurring", "Manual overrides in POS", "Branch-wise mismatch"],
-            actions: ["Implement daily POS-to-cash reconciliation", "Enforce branch exception reporting", "Restrict POS overrides", "Introduce daily store close checklist"]
-          },
-          {
-            label: "Discount and price override control",
-            prompt: "Are discounts, markdowns, and price overrides controlled and approved?",
-            docs: ["Discount reports", "Price override logs", "Promotions register", "Manager approvals"],
-            findings: ["Discount abuse suspected", "Unauthorized markdowns", "No approval trail", "Promotions not reconciled"],
-            actions: ["Create discount approval matrix", "Track override frequency by staff", "Reconcile promotion impact weekly"]
-          }
-        ]
-      },
-      {
-        title: "Inventory & Shrinkage",
-        questions: [
-          {
-            label: "Stock variance and shrinkage",
-            prompt: "Is there a meaningful difference between physical stock and system stock?",
-            docs: ["Cycle count reports", "Physical count sheets", "Inventory movement report", "Returns register"],
-            findings: ["High stock variance", "Shrinkage rising", "No cycle count program", "Warehouse/store transfers not logged"],
-            actions: ["Launch weekly cycle counts", "Segment stock losses by cause", "Tighten movement authorization", "Investigate high-loss SKUs"]
-          },
-          {
-            label: "Returns and damaged goods control",
-            prompt: "Are product returns, damages, and write-offs properly controlled?",
-            docs: ["Returns report", "Damage register", "Stock adjustment journal", "Credit note register"],
-            findings: ["Excessive returns", "Damages not approved", "No write-off governance", "Credit notes not reviewed"],
-            actions: ["Create returns approval policy", "Match returns to source sale", "Escalate frequent SKU issues", "Review write-offs monthly"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Manufacturing": {
-    guidance: "Focus on production yield, wastage, raw material usage, downtime, costing integrity, WIP control, maintenance discipline, and procurement leakages.",
-    sections: [
-      {
-        title: "Production Efficiency",
-        questions: [
-          {
-            label: "Yield and wastage control",
-            prompt: "Are yield losses, scrap, and material wastage being measured and managed?",
-            docs: ["Production reports", "Yield analysis", "Scrap register", "Raw material issue notes"],
-            findings: ["High wastage", "No standard usage benchmark", "Poor yield visibility", "Scrap not valued properly"],
-            actions: ["Define standard input-output ratios", "Track wastage by line", "Escalate abnormal scrap", "Benchmark actual vs standard usage"]
-          },
-          {
-            label: "Downtime and maintenance impact",
-            prompt: "Are unplanned downtimes significantly hurting output and margins?",
-            docs: ["Downtime logs", "Maintenance plans", "Machine utilization reports", "Incident register"],
-            findings: ["High unplanned downtime", "Reactive maintenance only", "Critical equipment recurring failures"],
-            actions: ["Introduce preventive maintenance schedule", "Measure downtime cost", "Prioritize bottleneck assets"]
-          }
-        ]
-      },
-      {
-        title: "Costing & Inventory",
-        questions: [
-          {
-            label: "Cost build-up reliability",
-            prompt: "Are product costs complete and reliable?",
-            docs: ["BOM", "Standard cost sheets", "Overhead allocation", "Variance analysis"],
-            findings: ["Cost sheets outdated", "Overheads poorly allocated", "WIP not reliable", "Margins misstated"],
-            actions: ["Refresh BOM and standard costs", "Run monthly cost variance analysis", "Reconcile WIP formally"]
-          },
-          {
-            label: "Raw material and WIP control",
-            prompt: "Are raw materials and WIP movements tightly controlled?",
-            docs: ["Stores ledger", "Issue vouchers", "WIP reports", "Material transfer notes"],
-            findings: ["Material leakage suspected", "Issue notes incomplete", "WIP aging unclear"],
-            actions: ["Control store access", "Require issue authorization", "Track WIP aging by batch"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Healthcare": {
-    guidance: "Focus on billing capture, insurance claims, consultant fee arrangements, pharmacy stock control, patient throughput, revenue leakages, and compliance documentation.",
-    sections: [
-      {
-        title: "Billing & Revenue Capture",
-        questions: [
-          {
-            label: "Patient billing completeness",
-            prompt: "Is every service rendered fully captured and billed?",
-            docs: ["Patient billing reports", "Service logs", "Doctor/consultant schedules", "Cash receipt register"],
-            findings: ["Services not billed", "Manual billing gaps", "Doctor charges outside system", "Unmatched patient records"],
-            actions: ["Match services to bills daily", "Centralize billing authority", "Review high-leakage departments"]
-          },
-          {
-            label: "Insurance and HMO claims discipline",
-            prompt: "Are insurance/HMO claims prepared, submitted, and recovered on time?",
-            docs: ["Claims aging", "Rejected claims report", "Tariff schedules", "HMO reconciliations"],
-            findings: ["Claims rejections high", "Claims delayed", "Tariffs outdated", "No claims follow-up dashboard"],
-            actions: ["Introduce claims tracker", "Analyze rejection causes", "Refresh tariffs and coding rules"]
-          }
-        ]
-      },
-      {
-        title: "Pharmacy & Clinical Operations",
-        questions: [
-          {
-            label: "Pharmacy stock and dispensing control",
-            prompt: "Is pharmacy inventory tightly controlled from receipt to dispensing?",
-            docs: ["Pharmacy stock report", "Dispensing logs", "Expiry register", "Stock adjustments"],
-            findings: ["Stock discrepancies", "Expired stock losses", "Dispensing not matched to billing"],
-            actions: ["Reconcile dispensing to billing", "Track expiries proactively", "Cycle count high-value drugs"]
-          },
-          {
-            label: "Patient throughput and resource utilization",
-            prompt: "Are patient waiting times, bed use, theater use, and staff deployment efficient?",
-            docs: ["Patient flow reports", "Bed occupancy", "Rostering schedules", "Turnaround times"],
-            findings: ["Long wait times", "Underused assets", "Poor rostering", "Bottleneck departments"],
-            actions: ["Map patient journey", "Optimize staffing by demand pattern", "Set throughput KPIs"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Banking / Financial Services": {
-    guidance: "Focus on revenue leakage, portfolio quality, fee capture, maker-checker governance, reconciliation discipline, exceptions management, and regulatory compliance.",
-    sections: [
-      {
-        title: "Revenue & Fee Capture",
-        questions: [
-          {
-            label: "Fee and commission capture",
-            prompt: "Are all eligible fees, commissions, and charges fully captured?",
-            docs: ["Fee income reports", "Product tariff schedules", "Waiver logs", "Exception reports"],
-            findings: ["Waivers excessive", "Tariffs not updated", "Manual overrides", "Fees not applied consistently"],
-            actions: ["Review fee leakage by product", "Control waiver authority", "Automate fee checks"]
-          },
-          {
-            label: "Reconciliation and suspense control",
-            prompt: "Are key accounts reconciled daily and suspense balances controlled?",
-            docs: ["Nostro/Vostro recon", "GL reconciliations", "Suspense reports", "Aging schedule"],
-            findings: ["Old suspense balances", "Delayed reconciliations", "Unexplained entries recurring"],
-            actions: ["Set reconciliation SLAs", "Age and clear suspense items", "Escalate recurring breaks"]
-          }
-        ]
-      },
-      {
-        title: "Credit & Governance",
-        questions: [
-          {
-            label: "Credit portfolio monitoring",
-            prompt: "Is portfolio quality actively monitored and early stress detected?",
-            docs: ["PAR / delinquency report", "Watchlist", "Restructuring log", "Collateral register"],
-            findings: ["Weak monitoring", "High overdue ratio", "Collateral values stale", "Watchlist inactive"],
-            actions: ["Strengthen early warning review", "Refresh collateral coverage", "Escalate stressed exposures"]
-          },
-          {
-            label: "Maker-checker and approval discipline",
-            prompt: "Are approvals, overrides, and processing rights properly segregated?",
-            docs: ["User access matrix", "Override logs", "Approval workflow", "Audit exceptions"],
-            findings: ["Access conflicts", "Frequent overrides", "Approval bypass risk"],
-            actions: ["Review SoD conflicts", "Limit overrides", "Tighten user-right governance"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Logistics / Transport": {
-    guidance: "Focus on route profitability, fleet utilization, fuel leakages, trip reconciliation, maintenance control, and receivables discipline.",
-    sections: [
-      {
-        title: "Fleet & Route Economics",
-        questions: [
-          {
-            label: "Fleet utilization and route profitability",
-            prompt: "Are route margins and vehicle utilization being tracked accurately?",
-            docs: ["Trip sheets", "Fleet utilization report", "Route profitability", "Delivery logs"],
-            findings: ["Idle fleet", "Unprofitable routes", "Empty return legs", "No route-level margin view"],
-            actions: ["Track route margin", "Optimize dispatching", "Reduce empty backhaul"]
-          },
-          {
-            label: "Fuel and trip leakage",
-            prompt: "Are fuel issuance, consumption, and trip expenses controlled?",
-            docs: ["Fuel logs", "Trip cash advances", "Telematics", "Expense claims"],
-            findings: ["Fuel leakages suspected", "Trip advances not retired", "Consumption anomalies"],
-            actions: ["Compare expected vs actual fuel usage", "Retire trip advances promptly", "Investigate route anomalies"]
-          }
-        ]
-      },
-      {
-        title: "Billing & Collections",
-        questions: [
-          {
-            label: "Proof of delivery to billing conversion",
-            prompt: "Are completed deliveries billed promptly and in full?",
-            docs: ["POD register", "Invoice register", "Customer contracts", "Billing turnaround report"],
-            findings: ["PODs not converted to invoices", "Rate errors", "Delayed billing", "Disputes frequent"],
-            actions: ["Track POD-to-invoice turnaround", "Validate contract rates before billing", "Escalate disputed invoices"]
-          },
-          {
-            label: "Receivables aging",
-            prompt: "Are logistics receivables aging beyond agreed credit terms?",
-            docs: ["AR aging", "Customer balances", "Collection notes", "Credit policy"],
-            findings: ["High overdue debt", "Weak collections", "Credit extension uncontrolled"],
-            actions: ["Create collection cadence", "Enforce credit holds", "Segment customers by aging risk"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Construction": {
-    guidance: "Focus on project costing, variation order control, subcontractor governance, materials usage, billing certification, retention balances, and WIP visibility.",
-    sections: [
-      {
-        title: "Project Costing & Site Controls",
-        questions: [
-          {
-            label: "Project cost control",
-            prompt: "Are project costs tracked against approved budgets in real time?",
-            docs: ["Project budgets", "Cost-to-complete", "Site cost reports", "Budget variance"],
-            findings: ["Cost overruns", "Late project reporting", "Budget monitoring weak"],
-            actions: ["Create project cost dashboard", "Track cost-to-complete monthly", "Escalate overruns early"]
-          },
-          {
-            label: "Materials and site usage leakage",
-            prompt: "Are site materials and consumables tightly controlled?",
-            docs: ["Site store ledger", "Issue vouchers", "Wastage logs", "Transfer notes"],
-            findings: ["Material leakages", "Poor store records", "Unapproved usage", "Pilferage risk"],
-            actions: ["Control site stores", "Authorize issues formally", "Reconcile materials to project stages"]
-          }
-        ]
-      },
-      {
-        title: "Billing, Variations & Retention",
-        questions: [
-          {
-            label: "Variation order governance",
-            prompt: "Are variations approved, priced, and billed properly?",
-            docs: ["Variation register", "Client approvals", "Interim certificates", "Claims register"],
-            findings: ["Variations unbilled", "Approvals incomplete", "Claims aging"],
-            actions: ["Track all variations centrally", "Link approval to billing", "Age outstanding claims"]
-          },
-          {
-            label: "Certification and retention management",
-            prompt: "Are work certifications, retentions, and collections actively managed?",
-            docs: ["IPC certificates", "Retention register", "Debtors aging", "Contract terms"],
-            findings: ["Certifications delayed", "Retention recovery neglected", "Collections weak"],
-            actions: ["Monitor certification cycle", "Track retention release dates", "Strengthen collection follow-up"]
-          }
-        ]
-      }
-    ]
-  },
-
-  "Professional Services": {
-    guidance: "Focus on timesheet capture, realization, billing discipline, client profitability, utilization, write-offs, and partner oversight.",
-    sections: [
-      {
-        title: "Utilization & Billing",
-        questions: [
-          {
-            label: "Time capture and realization",
-            prompt: "Are billable hours fully captured and realized?",
-            docs: ["Timesheets", "WIP report", "Realization report", "Write-off register"],
-            findings: ["Hours not captured", "Low realization", "High write-offs"],
-            actions: ["Tighten timesheet discipline", "Review realization by partner/team", "Escalate write-offs"]
-          },
-          {
-            label: "Invoice discipline",
-            prompt: "Are completed jobs billed promptly and accurately?",
-            docs: ["Client invoices", "Engagement letters", "Job completion logs", "Billing tracker"],
-            findings: ["Late billing", "Scope creep unbilled", "Fee disputes common"],
-            actions: ["Trigger invoice on milestone completion", "Control scope change approvals"]
-          }
-        ]
-      },
-      {
-        title: "Client Economics & Governance",
-        questions: [
-          {
-            label: "Client profitability visibility",
-            prompt: "Does management know which clients and service lines are profitable?",
-            docs: ["Client profitability", "Engagement margin", "Staff cost allocation"],
-            findings: ["Unprofitable clients not identified", "Pricing weak", "Partner-led leakage"],
-            actions: ["Create client profitability dashboard", "Review underpriced engagements"]
-          },
-          {
-            label: "Approval and partner oversight",
-            prompt: "Are partner decisions, discounts, and exceptions documented and reviewable?",
-            docs: ["Approval logs", "Discount logs", "Exception register"],
-            findings: ["Partner overrides informal", "No audit trail", "Client concessions poorly tracked"],
-            actions: ["Formalize approval trail", "Track fee concessions monthly"]
-          }
-        ]
-      }
-    ]
-  }
-};
-
-let loadedIndustry = null;
-let generatedReportText = "";
-
-function populateIndustrySelect(){
-  const select = document.getElementById("industrySelect");
-  select.innerHTML = '<option value="">Select industry</option>';
-  Object.keys(INDUSTRY_DATA).forEach(name=>{
-    const opt = document.createElement("option");
-    opt.value = name;
-    opt.textContent = name;
-    select.appendChild(opt);
-  });
-}
-
-function loadIndustryForm(){
-  const industry = document.getElementById("industrySelect").value;
-  const guidanceBox = document.getElementById("industryGuidance");
-  const container = document.getElementById("dynamicSections");
-
-  if(!industry || !INDUSTRY_DATA[industry]){
-    guidanceBox.textContent = "Please select a valid industry.";
-    container.innerHTML = "";
-    loadedIndustry = null;
-    return;
-  }
-
-  loadedIndustry = INDUSTRY_DATA[industry];
-  guidanceBox.innerHTML = `
-    <span class="badge">${industry}</span>
-    <span class="badge">Industry-aware diagnostics loaded</span>
-    <div style="margin-top:10px">${loadedIndustry.guidance}</div>
-  `;
-
-  container.innerHTML = "";
-
-  loadedIndustry.sections.forEach((section, sIdx)=>{
-    const sectionDiv = document.createElement("div");
-    sectionDiv.className = "section-box";
-    sectionDiv.innerHTML = `<h3>${sIdx + 1}. ${section.title}</h3>`;
-
-    section.questions.forEach((q, qIdx)=>{
-      const qId = `s${sIdx}_q${qIdx}`;
-      const docsOptions = q.docs.map(v => `<option>${v}</option>`).join("");
-      const findingOptions = q.findings.map(v => `<option>${v}</option>`).join("");
-      const actionOptions = q.actions.map(v => `<option>${v}</option>`).join("");
-
-      const box = document.createElement("div");
-      box.className = "question-box";
-      box.innerHTML = `
-        <h4>${q.label}</h4>
-        <div class="small">${q.prompt}</div>
-
-        <div class="grid grid-3" style="margin-top:12px;">
-          <div>
-            <label>Status</label>
-            <select id="${qId}_status">
-              <option value="0">No issue</option>
-              <option value="1">Minor issue</option>
-              <option value="2">Moderate issue</option>
-              <option value="3">Major issue</option>
-            </select>
-          </div>
-          <div>
-            <label>Priority</label>
-            <select id="${qId}_priority">
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Immediate">Immediate</option>
-            </select>
-          </div>
-          <div>
-            <label>Impact Area</label>
-            <select id="${qId}_impact">
-              <option>Revenue</option>
-              <option>Cost</option>
-              <option>Cash Flow</option>
-              <option>Control / Governance</option>
-              <option>Compliance</option>
-              <option>Customer Service</option>
-              <option>Operational Efficiency</option>
-              <option>Asset Protection</option>
-            </select>
-          </div>
+      <div class="card">
+        <div class="section-title">
+          <h2>2. Executive Snapshot</h2>
+          <span class="badge">Quick Read</span>
         </div>
 
-        <div class="grid grid-2">
-          <div>
-            <label>Suggested Documents</label>
-            <select id="${qId}_docPreset">
-              <option value="">Select suggested document</option>
-              ${docsOptions}
-            </select>
-            <textarea id="${qId}_docs" placeholder="Documents reviewed / requested"></textarea>
-          </div>
-          <div>
-            <label>Suggested Finding Type</label>
-            <select id="${qId}_findingPreset">
-              <option value="">Select suggested finding</option>
-              ${findingOptions}
-            </select>
-            <textarea id="${qId}_finding" placeholder="Findings / observations"></textarea>
-          </div>
+        <label>Revenue Trend</label>
+        <select id="revenueTrend">
+          <option>Growing strongly</option>
+          <option>Growing slowly</option>
+          <option>Flat</option>
+          <option>Declining</option>
+          <option>Unknown / weak reporting</option>
+        </select>
+
+        <label>Profitability Condition</label>
+        <select id="profitability">
+          <option>Healthy</option>
+          <option>Moderate</option>
+          <option>Thin margins</option>
+          <option>Loss making</option>
+          <option>Unknown</option>
+        </select>
+
+        <label>Operational Control Strength</label>
+        <select id="controlStrength">
+          <option>Strong</option>
+          <option>Adequate</option>
+          <option>Weak</option>
+          <option>Highly fragmented</option>
+        </select>
+
+        <label>Management Visibility Into Business</label>
+        <select id="visibility">
+          <option>Very clear</option>
+          <option>Mostly clear</option>
+          <option>Partial visibility</option>
+          <option>Poor visibility</option>
+        </select>
+
+        <label>Primary Commercial Challenge</label>
+        <select id="commercialChallenge">
+          <option>Lead generation</option>
+          <option>Conversion</option>
+          <option>Pricing</option>
+          <option>Retention / repeat business</option>
+          <option>Margin discipline</option>
+          <option>No clear commercial strategy</option>
+        </select>
+
+        <label>Primary Operational Challenge</label>
+        <select id="operationalChallenge">
+          <option>Weak process discipline</option>
+          <option>Inventory / asset leakage</option>
+          <option>Poor staff productivity</option>
+          <option>Cash control weakness</option>
+          <option>Poor reporting</option>
+          <option>Customer service inconsistency</option>
+        </select>
+
+        <label>Immediate Pain Points</label>
+        <textarea id="painPoints" placeholder="Enter the main visible issues: weak margins, theft, low conversion, stock losses, customer churn, poor compliance, weak supervision, delayed delivery, poor service consistency, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="section-title">
+        <h2>3. Cross-Industry Diagnostic</h2>
+        <span class="badge">Core Questions</span>
+      </div>
+      <div id="coreQuestions"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="section-title">
+        <h2>4. Sector-Specific Diagnostic</h2>
+        <span class="badge">Industry Aware</span>
+      </div>
+      <div id="industryQuestions">
+        <p style="color:var(--muted);margin:0;">Select an industry / sector above to load the expanded industry-specific question set.</p>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:16px;">
+      <div class="card">
+        <div class="section-title">
+          <h2>5. Additional Interview Capture</h2>
+          <span class="badge">Dynamic Notes</span>
         </div>
 
-        <div class="grid grid-2">
-          <div>
-            <label>Suggested Action</label>
-            <select id="${qId}_actionPreset">
-              <option value="">Select suggested action</option>
-              ${actionOptions}
-            </select>
-            <textarea id="${qId}_action" placeholder="Required action / recommendation"></textarea>
-          </div>
-          <div>
-            <label>Monitoring Metric</label>
-            <textarea id="${qId}_monitor" placeholder="e.g. weekly exception report, monthly variance review, daily reconciliation"></textarea>
-          </div>
+        <label>Unexpected Question 1</label>
+        <textarea id="spQ1" placeholder="Question raised during live discussion"></textarea>
+        <label>Response / Observation 1</label>
+        <textarea id="spA1" placeholder="How the client answered / what you observed"></textarea>
+
+        <label>Unexpected Question 2</label>
+        <textarea id="spQ2"></textarea>
+        <label>Response / Observation 2</label>
+        <textarea id="spA2"></textarea>
+
+        <label>Unexpected Question 3</label>
+        <textarea id="spQ3"></textarea>
+        <label>Response / Observation 3</label>
+        <textarea id="spA3"></textarea>
+      </div>
+
+      <div class="card">
+        <div class="section-title">
+          <h2>6. Consultant Notes</h2>
+          <span class="badge">Advisory Input</span>
         </div>
+
+        <label>Observed Red Flags</label>
+        <textarea id="redFlags" placeholder="List visible control gaps, commercial leakage points, risk concentrations, weak reporting practices, or execution issues"></textarea>
+
+        <label>Quick Wins (0-30 days)</label>
+        <textarea id="quickWins" placeholder="Actions that can produce immediate visible improvement"></textarea>
+
+        <label>Medium-Term Priorities (31-90 days)</label>
+        <textarea id="mediumTerm" placeholder="Stabilization and system improvement actions"></textarea>
+
+        <label>Long-Term Strategic Moves (90+ days)</label>
+        <textarea id="longTerm" placeholder="Structural changes, technology, governance, business model refinement, scaling improvements"></textarea>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="section-title">
+        <h2>7. Summary Dashboard</h2>
+        <span class="badge">Scored Output</span>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="score-box">
+          <h3>Operational Health</h3>
+          <div class="big-score" id="operationalScore">--</div>
+          <div id="operationalLabel" class="pill info">Awaiting assessment</div>
+          <div class="tiny">Processes, staff execution, workflow consistency, delivery control</div>
+        </div>
+
+        <div class="score-box">
+          <h3>Commercial Health</h3>
+          <div class="big-score" id="commercialScore">--</div>
+          <div id="commercialLabel" class="pill info">Awaiting assessment</div>
+          <div class="tiny">Sales, pricing, retention, profitability visibility, growth effectiveness</div>
+        </div>
+
+        <div class="score-box">
+          <h3>Risk / Control Health</h3>
+          <div class="big-score" id="riskScore">--</div>
+          <div id="riskLabel" class="pill info">Awaiting assessment</div>
+          <div class="tiny">Cash discipline, governance, compliance, data quality, reporting integrity</div>
+        </div>
+      </div>
+
+      <div class="btn-row no-print">
+        <button onclick="generateReport()">Generate Report</button>
+        <button class="secondary" onclick="window.print()">Print / Save PDF</button>
+        <button class="dark" onclick="clearAllFields()">Clear Form</button>
+      </div>
+
+      <div class="small-note">
+        The engine scores the consultation based on both core business health and the selected sector-specific operating context.
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="section-title">
+        <h2>8. Generated Advisory Report</h2>
+        <span class="badge">Client Draft</span>
+      </div>
+      <div id="reportOutput" class="report">Your generated report will appear here after you click “Generate Report”.</div>
+      <div class="small-note">
+        This output is a working consulting draft. You can later convert it into a formal branded report, proposal, or monitoring deck.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const coreQuestionData = [
+      {
+        id: "cq1",
+        section: "Leadership & Governance",
+        question: "How clearly are roles, reporting lines, approval authority, and accountability ownership defined across the business?",
+        hint: "Weak role clarity usually creates duplication, slow decisions, blame-shifting, and unmanaged operational drift."
+      },
+      {
+        id: "cq2",
+        section: "Financial Control",
+        question: "How strong are controls over cash, receivables, payables, expenses, approvals, and reconciliation routines?",
+        hint: "Cash leakage, weak reconciliation, and informal approval culture are major hidden destroyers of profit."
+      },
+      {
+        id: "cq3",
+        section: "Operations & Process Discipline",
+        question: "How standardized and well-followed are the daily operating processes, SOPs, service workflows, and escalation paths?",
+        hint: "When process discipline is weak, the customer experience and cost structure both suffer."
+      },
+      {
+        id: "cq4",
+        section: "People & Performance",
+        question: "How effective are staffing quality, supervision, KPIs, productivity tracking, training, and consequences for underperformance?",
+        hint: "A business can look commercially active while actually bleeding value through weak people management."
+      },
+      {
+        id: "cq5",
+        section: "Sales, Pricing & Customer Growth",
+        question: "How effective are lead generation, conversion, customer retention, pricing decisions, and sales accountability?",
+        hint: "Many businesses work hard but still underperform because their commercial engine is not disciplined."
+      },
+      {
+        id: "cq6",
+        section: "Technology, Data & Reporting",
+        question: "How reliable are the systems, dashboards, management information, operational reports, and decision-support data used by leadership?",
+        hint: "Poor reporting reduces management visibility and delays intervention until the problem becomes expensive."
+      }
+    ];
+
+    const sectorQuestionBank = {
+      hospitality: [
+        "How well are occupancy, average daily rate, RevPAR, table turnover, guest feedback, and channel mix tracked and acted on?",
+        "How tightly are food cost, wastage, spoilage, pilferage, beverage control, and stock reconciliation managed?",
+        "How efficient are reservations, guest check-in/check-out, complaint handling, and service recovery procedures?",
+        "How effectively are staffing schedules aligned across kitchen, front desk, housekeeping, service, and maintenance?",
+        "How well does the business drive repeat visits, upselling, event revenue, online ratings, and customer loyalty performance?"
+      ],
+      legal: [
+        "How accurately are billable hours, matter economics, write-downs, write-offs, and collection cycles tracked?",
+        "How disciplined are client onboarding, conflict checks, engagement letters, KYC, and matter opening controls?",
+        "How strong are deadline management, document versioning, file retrieval, and legal workflow discipline?",
+        "How effectively are partners, associates, and support staff utilized relative to profitability and turnaround demands?",
+        "How well does the firm convert pipeline opportunities into retained, profitable, and collectible mandates?"
+      ],
+      airtravel: [
+        "How efficient are booking, ticketing, revalidation, rescheduling, cancellation, and refund handling processes?",
+        "How well are airline commission, supplier reconciliation, refund exposure, and receivable recovery controlled?",
+        "How effectively does the agency handle customer complaints, travel disruptions, and rapid itinerary amendments?",
+        "How diversified is revenue across retail ticketing, corporate travel, group travel, holiday packages, visa support, and ancillary services?",
+        "How strong are controls over service errors, pricing mistakes, reissue costs, and airline-related operational exposures?"
+      ],
+      phoneretail: [
+        "How tightly are inventory, shrinkage, damaged stock, theft exposure, accessory attachment sales, and transfer controls managed?",
+        "How visible are margins by product line, brand, salesperson, branch, and promotional campaign?",
+        "How effective are upselling, warranty conversion, repair/refurbishment revenue, and repeat customer programs?",
+        "How strong are cash controls, POS discipline, card settlement visibility, and daily till reconciliation?",
+        "How efficiently does the business manage fast-moving, slow-moving, obsolete, and counterfeit-risk inventory?"
+      ],
+      healthcare: [
+        "How efficient are patient flow, appointment scheduling, wait time management, service turnaround, and discharge processes?",
+        "How accurate and controlled are billing, coding, claims, cash collection, insurer reconciliation, and receivable recovery?",
+        "How disciplined are patient records, incident reporting, regulatory compliance, and documentation quality?",
+        "How effectively are doctors, nurses, admin staff, labs, and support resources allocated to demand patterns?",
+        "How well is patient satisfaction, referral growth, service quality, and repeat trust being built and tracked?"
+      ],
+      education: [
+        "How well are enrollment, retention, fee collection, absenteeism, and student progression metrics tracked?",
+        "How standardized are teaching quality controls, lesson delivery, academic review, and performance assurance systems?",
+        "How strong are administrative processes over records, attendance, communication, compliance, and parent engagement?",
+        "How effectively are teachers, non-academic staff, facilities, and class capacity utilized?",
+        "How well does the institution convert reputation, outcomes, and market positioning into sustainable admission growth?"
+      ],
+      engineering: [
+        "How strong are project costing, milestone tracking, scope discipline, variation management, and post-project review processes?",
+        "How effectively are technical staff utilization, backlog, bid conversion, and proposal economics managed?",
+        "How disciplined are QA/QC, design review, sign-off, and client approval workflows?",
+        "How well are procurement, vendor performance, subcontracting, and delivery schedules coordinated?",
+        "How clear is profitability visibility by project, team, service line, and client segment?"
+      ],
+      construction: [
+        "How tightly are budget overruns, materials control, rework, wastage, subcontractor claims, and site-level leakages managed?",
+        "How strong are site supervision, HSE compliance, progress certification, and work quality assurance routines?",
+        "How accurate are tendering, BOQ translation, variation pricing, cash flow planning, and interim valuation controls?",
+        "How effectively are labor, machinery, procurement, and milestone dependencies coordinated across projects?",
+        "How well are project delay risk, defect exposure, retention issues, and client dispute triggers anticipated and managed?"
+      ],
+      entertainment: [
+        "How effectively are projects monetized across events, content, sponsorship, distribution, licensing, and partnerships?",
+        "How tightly are production budgets, vendor contracts, location costs, and commercial spend controlled?",
+        "How well are talent obligations, IP usage, rights management, deliverables, and legal exposures governed?",
+        "How effectively does the business convert audience attention into recurring revenue and brand partnership value?",
+        "How reliable are campaign reports, event outcome reviews, and content profitability tracking?"
+      ],
+      manufacturing: [
+        "How well are production yields, downtime, wastage, machine utilization, and defect rates measured and acted on?",
+        "How strong are raw material controls, batch tracking, quality assurance, and finished goods reconciliation?",
+        "How effectively are production scheduling, maintenance planning, and procurement lead times aligned?",
+        "How visible are unit economics, factory overhead absorption, and margin by product line?",
+        "How well does the operation manage inventory aging, fulfillment reliability, and customer quality complaints?"
+      ],
+      distribution: [
+        "How controlled are warehouse accuracy, order fulfillment, stock aging, dispatch errors, and returns handling?",
+        "How strong are purchasing discipline, supplier performance tracking, and landed cost visibility?",
+        "How effectively are delivery schedules, route efficiency, and distribution cost per order monitored?",
+        "How well are branch or territory sales, margin leakage, and inventory movement visibility managed?",
+        "How prepared is the business to reduce dead stock, improve order accuracy, and strengthen working capital turn?"
+      ],
+      retailgeneral: [
+        "How tightly are store-level controls, shrinkage, pricing compliance, and branch performance monitored?",
+        "How clearly are sales conversion, basket size, repeat customer behavior, and promotional performance tracked?",
+        "How strong are stock counts, replenishment discipline, and shelf availability management?",
+        "How well are branch managers and sales staff measured against clear commercial and operational KPIs?",
+        "How effectively does the business translate footfall into profitable sales rather than activity without margin control?"
+      ],
+      professionalservices: [
+        "How well are utilization, proposal conversion, engagement profitability, and receivable cycles monitored?",
+        "How disciplined are project scoping, client onboarding, delivery governance, and commercial approvals?",
+        "How strong are reporting, knowledge capture, documentation quality, and service consistency practices?",
+        "How effectively are consultants assigned relative to skill fit, billability, and client profitability?",
+        "How well does the firm protect margins while sustaining strong client outcomes and repeat business?"
+      ],
+      financialservices: [
+        "How strong are onboarding, compliance, KYC, risk review, approval controls, and auditability?",
+        "How visible are product profitability, customer segmentation, cost-to-serve, and cross-sell effectiveness?",
+        "How disciplined are collections, exception reporting, reconciliations, and control breach escalation routines?",
+        "How effectively are front office, operations, finance, compliance, and service teams coordinated?",
+        "How well does management balance growth with risk discipline and operational control integrity?"
+      ],
+      logistics: [
+        "How efficiently are dispatch planning, route productivity, asset utilization, and turnaround time controlled?",
+        "How strong are fuel controls, maintenance tracking, trip reconciliation, and loss/damage reporting?",
+        "How visible are cost per trip, on-time performance, vehicle downtime, and customer SLA compliance?",
+        "How effectively are drivers, warehouse teams, and operations coordinators managed against measurable standards?",
+        "How well does the business manage cash leakage, fraud exposure, and delivery-related customer disputes?"
+      ],
+      technology: [
+        "How clearly are product priorities, development workflow, support response, and release discipline managed?",
+        "How well are customer acquisition cost, churn, retention, and recurring revenue economics understood?",
+        "How strong are data integrity, platform stability, security hygiene, and reporting visibility?",
+        "How effectively are engineering, support, sales, and product teams aligned around measurable outcomes?",
+        "How prepared is the business to scale operations without service breakdown, customer dissatisfaction, or margin erosion?"
+      ],
+      telecom: [
+        "How tightly are activations, service uptime, recharge patterns, support turnaround, and customer complaints monitored?",
+        "How strong are controls over device stock, SIM inventory, field agents, commissions, and recharge reconciliation?",
+        "How effectively are churn, ARPU, acquisition cost, and territory performance tracked?",
+        "How well are technical operations, commercial teams, and customer care aligned around service quality outcomes?",
+        "How prepared is the business to reduce service leakage, fraud exposure, and network-related reputational risk?"
+      ],
+      realestate: [
+        "How clearly are listings, occupancy, rent collection, vacancy, maintenance, and client follow-up tracked?",
+        "How strong are controls over agency commissions, tenancy administration, service charge collections, and contractor billing?",
+        "How efficiently are inspections, maintenance requests, handovers, and dispute resolution managed?",
+        "How visible are profitability, arrears, and performance by property, development, or client class?",
+        "How well does the business convert leads and reputation into repeat property transactions or retained management mandates?"
+      ],
+      nonprofit: [
+        "How disciplined are program reporting, donor reporting, grant usage controls, and accountability mechanisms?",
+        "How strong are budgeting, procurement controls, partner oversight, and expense justification routines?",
+        "How effectively are impact metrics, delivery milestones, and field operations tracked?",
+        "How well are staff, volunteers, and program teams aligned with clear accountability and resource usage visibility?",
+        "How prepared is the organization to demonstrate measurable outcomes, donor confidence, and operating sustainability?"
+      ],
+      agriculture: [
+        "How well are yield, input cost, spoilage, seasonal planning, and farm-to-market efficiency controlled?",
+        "How strong are inventory controls over seed, fertilizer, feed, produce, livestock, and farm equipment?",
+        "How effectively are labor, harvesting, storage, and logistics coordinated to reduce loss?",
+        "How visible are margins by crop, product line, season, market channel, or farm unit?",
+        "How prepared is the business to manage weather risk, price volatility, and post-harvest leakage?"
+      ],
+      general: [
+        "How effectively is the business translating effort into repeatable, profitable output rather than unmanaged activity?",
+        "How strong are the internal controls, visibility tools, and management decision routines that drive accountability?",
+        "How clearly are unit economics, customer acquisition, conversion, retention, and delivery consistency being tracked?",
+        "How reliable is execution across people, process, customer service, and issue escalation?",
+        "How prepared is the business to scale without breakdown in controls, service quality, or commercial discipline?"
+      ]
+    };
+
+    function scoreOptions(){
+      return `
+        <option value="5">Strong / Excellent</option>
+        <option value="4">Good / Adequate</option>
+        <option value="3">Average / Mixed</option>
+        <option value="2">Weak / Inconsistent</option>
+        <option value="1">Poor / Not in place</option>
       `;
+    }
 
-      sectionDiv.appendChild(box);
-    });
+    function priorityOptions(){
+      return `
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      `;
+    }
 
-    container.appendChild(sectionDiv);
-  });
+    function renderCoreQuestions(){
+      const holder = document.getElementById("coreQuestions");
+      holder.innerHTML = coreQuestionData.map((q, idx) => `
+        <div class="question-block">
+          <h4>${idx + 1}. ${q.section}</h4>
+          <div class="question-text">${q.question}</div>
+          <div class="tiny">${q.hint}</div>
 
-  wirePresetSelectors();
-}
+          <div class="meta">
+            <div>
+              <label>Assessment Rating</label>
+              <select id="${q.id}_score">
+                ${scoreOptions()}
+              </select>
+            </div>
+            <div>
+              <label>Priority Level</label>
+              <select id="${q.id}_priority">
+                ${priorityOptions()}
+              </select>
+            </div>
+          </div>
 
-function wirePresetSelectors(){
-  if(!loadedIndustry) return;
+          <label>Comments / Findings</label>
+          <textarea id="${q.id}_comment" placeholder="Enter observations, evidence, or issues found"></textarea>
 
-  loadedIndustry.sections.forEach((section, sIdx)=>{
-    section.questions.forEach((q, qIdx)=>{
-      const qId = `s${sIdx}_q${qIdx}`;
+          <label>Required Actions</label>
+          <textarea id="${q.id}_action" placeholder="Enter corrective actions or advisory steps"></textarea>
+        </div>
+      `).join("");
+    }
 
-      const docPreset = document.getElementById(`${qId}_docPreset`);
-      const docsBox = document.getElementById(`${qId}_docs`);
-      const findingPreset = document.getElementById(`${qId}_findingPreset`);
-      const findingBox = document.getElementById(`${qId}_finding`);
-      const actionPreset = document.getElementById(`${qId}_actionPreset`);
-      const actionBox = document.getElementById(`${qId}_action`);
+    function renderIndustryQuestions(){
+      const industry = getValue("industry");
+      const holder = document.getElementById("industryQuestions");
 
-      docPreset.addEventListener("change", function(){
-        if(this.value){
-          docsBox.value = docsBox.value ? docsBox.value + "\\n" + this.value : this.value;
-        }
-      });
-
-      findingPreset.addEventListener("change", function(){
-        if(this.value){
-          findingBox.value = findingBox.value ? findingBox.value + "\\n" + this.value : this.value;
-        }
-      });
-
-      actionPreset.addEventListener("change", function(){
-        if(this.value){
-          actionBox.value = actionBox.value ? actionBox.value + "\\n" + this.value : this.value;
-        }
-      });
-    });
-  });
-}
-
-function riskFromScore(score){
-  if(score >= 16) return "Critical";
-  if(score >= 10) return "High";
-  if(score >= 5) return "Moderate";
-  if(score >= 1) return "Manageable";
-  return "Stable";
-}
-
-function priorityFromIssues(highCount, immediateCount, totalIssues){
-  if(immediateCount >= 1) return "Immediate";
-  if(highCount >= 2) return "High";
-  if(totalIssues >= 3) return "Medium";
-  if(totalIssues >= 1) return "Low";
-  return "Routine";
-}
-
-function generateReport(){
-  if(!loadedIndustry){
-    alert("Please select an industry and load the assessment first.");
-    return;
-  }
-
-  const clientName = document.getElementById("clientName").value.trim();
-  const industry = document.getElementById("industrySelect").value.trim();
-  const consultantName = document.getElementById("consultantName").value.trim();
-  const assessmentDate = document.getElementById("assessmentDate").value.trim();
-  const businessSize = document.getElementById("businessSize").value.trim();
-  const market = document.getElementById("market").value.trim();
-  const overview = document.getElementById("overview").value.trim();
-  const extraQuestion = document.getElementById("extraQuestion").value.trim();
-  const extraResponse = document.getElementById("extraResponse").value.trim();
-  const redFlags = document.getElementById("redFlags").value.trim();
-
-  let totalScore = 0;
-  let totalIssues = 0;
-  let highCount = 0;
-  let immediateCount = 0;
-  let issueLines = [];
-  let actionLines = [];
-  let monitorLines = [];
-  let impactSummary = {};
-
-  loadedIndustry.sections.forEach((section, sIdx)=>{
-    section.questions.forEach((q, qIdx)=>{
-      const qId = `s${sIdx}_q${qIdx}`;
-      const statusVal = parseInt(document.getElementById(`${qId}_status`).value || "0", 10);
-      const statusText = document.getElementById(`${qId}_status`).options[document.getElementById(`${qId}_status`).selectedIndex].text;
-      const priority = document.getElementById(`${qId}_priority`).value;
-      const impact = document.getElementById(`${qId}_impact`).value;
-      const docs = document.getElementById(`${qId}_docs`).value.trim();
-      const finding = document.getElementById(`${qId}_finding`).value.trim();
-      const action = document.getElementById(`${qId}_action`).value.trim();
-      const monitor = document.getElementById(`${qId}_monitor`).value.trim();
-
-      totalScore += statusVal;
-
-      if(statusVal > 0){
-        totalIssues += 1;
-        if(priority === "High") highCount += 1;
-        if(priority === "Immediate") immediateCount += 1;
-        impactSummary[impact] = (impactSummary[impact] || 0) + 1;
-
-        issueLines.push(
-`${section.title} - ${q.label}
-Status: ${statusText}
-Priority: ${priority}
-Impact Area: ${impact}
-Documents: ${docs || "Not stated"}
-Finding: ${finding || "Not stated"}` );
-
-        actionLines.push(
-`${section.title} - ${q.label}
-Recommended Action: ${action || "Action not entered"}` );
-
-        monitorLines.push(
-`${section.title} - ${q.label}
-Monitoring: ${monitor || "Monitoring metric not entered"}` );
+      if(!industry){
+        holder.innerHTML = `<p style="color:var(--muted);margin:0;">Select an industry / sector above to load the expanded industry-specific question set.</p>`;
+        return;
       }
-    });
-  });
 
-  const risk = riskFromScore(totalScore);
-  const priority = priorityFromIssues(highCount, immediateCount, totalIssues);
+      const questions = sectorQuestionBank[industry] || sectorQuestionBank.general;
 
-  document.getElementById("kpiScore").textContent = totalScore;
-  document.getElementById("kpiIssues").textContent = totalIssues;
-  document.getElementById("kpiRisk").textContent = risk;
-  document.getElementById("kpiPriority").textContent = priority;
+      holder.innerHTML = questions.map((q, idx) => `
+        <div class="question-block">
+          <h4>${idx + 1}. Sector Focus Area</h4>
+          <div class="question-text">${q}</div>
+          <div class="tiny">Use this to probe the operating realities of the selected industry rather than relying on general assumptions.</div>
 
-  const topImpacts = Object.keys(impactSummary).length
-    ? Object.entries(impactSummary).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`${k}: ${v}`).join("; ")
-    : "No significant impact concentrations identified.";
+          <div class="meta">
+            <div>
+              <label>Assessment Rating</label>
+              <select id="iq${idx+1}_score">
+                ${scoreOptions()}
+              </select>
+            </div>
+            <div>
+              <label>Priority Level</label>
+              <select id="iq${idx+1}_priority">
+                ${priorityOptions()}
+              </select>
+            </div>
+          </div>
 
-  generatedReportText =
-`FRACTIONAL CONSULTING DIAGNOSTIC REPORT
-======================================
+          <label>Comments / Findings</label>
+          <textarea id="iq${idx+1}_comment" placeholder="Enter sector-specific findings"></textarea>
 
-CLIENT PROFILE
---------------
-Client Name: ${clientName || "Not provided"}
-Industry: ${industry || "Not provided"}
-Consultant: ${consultantName || "Not provided"}
-Assessment Date: ${assessmentDate || "Not provided"}
-Business Size: ${businessSize || "Not provided"}
-Country / Market: ${market || "Not provided"}
+          <label>Required Actions</label>
+          <textarea id="iq${idx+1}_action" placeholder="Enter required actions for this sector-specific issue"></textarea>
+        </div>
+      `).join("");
+    }
 
-BUSINESS OVERVIEW
------------------
-${overview || "No overview provided."}
+    function getValue(id){
+      const el = document.getElementById(id);
+      return el ? el.value.trim() : "";
+    }
 
-INDUSTRY FOCUS
---------------
-${loadedIndustry.guidance}
+    function avg(values){
+      const cleaned = values.filter(v => !isNaN(v) && v > 0);
+      if(!cleaned.length) return 0;
+      return cleaned.reduce((a,b) => a+b, 0) / cleaned.length;
+    }
 
-EXECUTIVE SUMMARY
------------------
-Total Score: ${totalScore}
-Issues Identified: ${totalIssues}
-Risk Level: ${risk}
-Priority Level: ${priority}
-Impact Concentration: ${topImpacts}
+    function labelClass(score){
+      if(score >= 4.5) return {text:"Strong", cls:"good"};
+      if(score >= 3.2) return {text:"Moderate", cls:"warn"};
+      return {text:"Needs Attention", cls:"bad"};
+    }
 
-KEY ISSUES IDENTIFIED
----------------------
-${issueLines.length ? issueLines.join("\n\n") : "No material issues recorded."}
+    function scoreText(score){
+      return score ? `${score.toFixed(1)}/5` : "--";
+    }
 
-SECTOR-SPECIFIC ACTION PLAN
----------------------------
-${actionLines.length ? actionLines.join("\n\n") : "No action plan generated because no issues were identified."}
+    function buildSpontaneousBlock(){
+      const arr = [
+        {q:getValue("spQ1"), a:getValue("spA1")},
+        {q:getValue("spQ2"), a:getValue("spA2")},
+        {q:getValue("spQ3"), a:getValue("spA3")}
+      ].filter(x => x.q || x.a);
 
-MONITORING FRAMEWORK
---------------------
-${monitorLines.length ? monitorLines.join("\n\n") : "No monitoring metrics entered."}
+      if(!arr.length){
+        return "No spontaneous questions recorded.";
+      }
 
-ADDITIONAL FINDINGS
--------------------
-Additional Question: ${extraQuestion || "None"}
-Observed Response / Issue: ${extraResponse || "None"}
+      return arr.map((x, i) =>
+        `${i + 1}. Question: ${x.q || "N/A"}\n   Response / Observation: ${x.a || "N/A"}`
+      ).join("\n\n");
+    }
 
-RED FLAGS / CONSULTANT COMMENTARY
----------------------------------
-${redFlags || "None recorded."}
+    function generateReport(){
+      const clientName = getValue("clientName");
+      const contactPerson = getValue("contactPerson");
+      const consultantName = getValue("consultantName");
+      const industry = getValue("industry");
+      const subSector = getValue("subSector");
+      const businessStage = getValue("businessStage");
+      const businessSize = getValue("businessSize");
+      const locations = getValue("locations");
+      const engagementReason = getValue("engagementReason");
 
-CONSULTANT CONCLUSION
----------------------
-This ${industry || "selected"} review indicates an overall ${risk.toLowerCase()} risk profile with ${priority.toLowerCase()} intervention priority. The observed issues are concentrated mainly around: ${topImpacts}. Immediate management attention should focus on high-leakage and high-control-risk areas first, followed by structured remediation, monitoring, and periodic reassessment.`;
+      const revenueTrend = getValue("revenueTrend");
+      const profitability = getValue("profitability");
+      const controlStrength = getValue("controlStrength");
+      const visibility = getValue("visibility");
+      const commercialChallenge = getValue("commercialChallenge");
+      const operationalChallenge = getValue("operationalChallenge");
+      const painPoints = getValue("painPoints");
 
-  document.getElementById("reportOutput").textContent = generatedReportText;
-}
+      const redFlags = getValue("redFlags");
+      const quickWins = getValue("quickWins");
+      const mediumTerm = getValue("mediumTerm");
+      const longTerm = getValue("longTerm");
 
-function downloadReport(){
-  const text = generatedReportText || "Please generate the report first.";
-  const blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "fractional_consulting_report_v3.txt";
-  a.click();
-  URL.revokeObjectURL(url);
-}
+      const coreScores = [];
+      const coreNarratives = [];
+      const actionItems = [];
 
-populateIndustrySelect();
-</script>
+      coreQuestionData.forEach((q, idx) => {
+        const score = Number(getValue(`${q.id}_score`) || 0);
+        const priority = getValue(`${q.id}_priority`);
+        const comment = getValue(`${q.id}_comment`);
+        const action = getValue(`${q.id}_action`);
+
+        coreScores.push(score);
+
+        coreNarratives.push(
+`${idx + 1}. ${q.section}
+   Question: ${q.question}
+   Rating: ${score}/5
+   Priority: ${priority || "Not entered"}
+   Findings: ${comment || "Not entered"}
+   Required Action: ${action || "Not entered"}`
+        );
+
+        if(action){
+          actionItems.push(`- ${q.section} [${priority || "Medium"}]: ${action}`);
+        }
+      });
+
+      const industryQuestions = sectorQuestionBank[industry] || [];
+      const industryScores = [];
+      const industryNarratives = [];
+
+      for(let i = 0; i < industryQuestions.length; i++){
+        const score = Number(getValue(`iq${i+1}_score`) || 0);
+        const priority = getValue(`iq${i+1}_priority`);
+        const comment = getValue(`iq${i+1}_comment`);
+        const action = getValue(`iq${i+1}_action`);
+
+        industryScores.push(score);
+
+        industryNarratives.push(
+`${i + 1}. ${industryQuestions[i]}
+   Rating: ${score}/5
+   Priority: ${priority || "Not entered"}
+   Findings: ${comment || "Not entered"}
+   Required Action: ${action || "Not entered"}`
+        );
+
+        if(action){
+          actionItems.push(`- Sector Item ${i + 1} [${priority || "Medium"}]: ${action}`);
+        }
+      }
+
+      const operationalScore = avg([
+        Number(getValue("cq1_score")),
+        Number(getValue("cq3_score")),
+        Number(getValue("cq4_score")),
+        industryScores[0] || 0,
+        industryScores[1] || 0,
+        industryScores[2] || 0
+      ]);
+
+      const commercialScore = avg([
+        Number(getValue("cq5_score")),
+        industryScores[3] || 0,
+        industryScores[4] || 0,
+        Number(getValue("cq6_score"))
+      ]);
+
+      const riskScore = avg([
+        Number(getValue("cq1_score")),
+        Number(getValue("cq2_score")),
+        Number(getValue("cq6_score"))
+      ]);
+
+      const opLabel = labelClass(operationalScore);
+      const comLabel = labelClass(commercialScore);
+      const riskLabel = labelClass(riskScore);
+
+      document.getElementById("operationalScore").textContent = scoreText(operationalScore);
+      document.getElementById("commercialScore").textContent = scoreText(commercialScore);
+      document.getElementById("riskScore").textContent = scoreText(riskScore);
+
+      const opEl = document.getElementById("operationalLabel");
+      const comEl = document.getElementById("commercialLabel");
+      const riskEl = document.getElementById("riskLabel");
+
+      opEl.className = `pill ${opLabel.cls}`;
+      comEl.className = `pill ${comLabel.cls}`;
+      riskEl.className = `pill ${riskLabel.cls}`;
+
+      opEl.textContent = opLabel.text;
+      comEl.textContent = comLabel.text;
+      riskEl.textContent = riskLabel.text;
+
+      const overallAverage = avg([...coreScores, ...industryScores]);
+
+      let overallJudgement = "The business appears broadly stable but should still be optimized for stronger visibility, tighter controls, and more deliberate commercial execution.";
+
+      if(overallAverage < 2.5){
+        overallJudgement = "The business shows material structural weakness. Immediate intervention is needed across controls, visibility, management discipline, and commercial execution. This is not a light optimization case; it is a stabilization and leakage-reduction engagement.";
+      } else if(overallAverage < 3.6){
+        overallJudgement = "The business has workable foundations but is underperforming relative to its likely potential. The main opportunity is to tighten execution, improve visibility, reduce leakage, and install more disciplined operating routines.";
+      } else {
+        overallJudgement = "The business shows a relatively solid base, but further gains remain available through sharper reporting, stronger conversion systems, tighter accountability, and more deliberate scaling readiness.";
+      }
+
+      const spontaneousBlock = buildSpontaneousBlock();
+
+      const quickPlan = quickWins || "Tighten basic controls, improve visibility, define accountability, and address the most visible leakage points first.";
+      const mediumPlan = mediumTerm || "Standardize routines, strengthen KPI reporting, improve profitability visibility, and reinforce staff execution discipline.";
+      const longPlan = longTerm || "Implement structural governance, workflow redesign, supporting technology, sector-specific dashboards, and scalable management controls.";
+
+      const report = `
+FRACTIONAL CONSULTING DIAGNOSTIC REPORT
+
+A. CLIENT DETAILS
+Client Name: ${clientName || "Not entered"}
+Contact Person: ${contactPerson || "Not entered"}
+Consultant Name: ${consultantName || "Not entered"}
+Industry / Sector: ${industry || "Not selected"}
+Sub-Sector / Niche: ${subSector || "Not entered"}
+Business Stage: ${businessStage || "Not entered"}
+Business Size: ${businessSize || "Not entered"}
+Locations / Branches: ${locations || "Not entered"}
+
+B. ENGAGEMENT CONTEXT
+Reason for Engagement:
+${engagementReason || "Not entered"}
+
+C. EXECUTIVE SNAPSHOT
+Revenue Trend: ${revenueTrend || "Not entered"}
+Profitability Condition: ${profitability || "Not entered"}
+Operational Control Strength: ${controlStrength || "Not entered"}
+Management Visibility: ${visibility || "Not entered"}
+Primary Commercial Challenge: ${commercialChallenge || "Not entered"}
+Primary Operational Challenge: ${operationalChallenge || "Not entered"}
+
+Immediate Pain Points:
+${painPoints || "Not entered"}
+
+D. SUMMARY SCORES
+Operational Health Score: ${scoreText(operationalScore)} (${opLabel.text})
+Commercial Health Score: ${scoreText(commercialScore)} (${comLabel.text})
+Risk / Control Health Score: ${scoreText(riskScore)} (${riskLabel.text})
+
+E. OVERALL ADVISORY JUDGEMENT
+${overallJudgement}
+
+F. CROSS-INDUSTRY FINDINGS
+${coreNarratives.join("\n\n")}
+
+G. SECTOR-SPECIFIC FINDINGS
+${industryNarratives.length ? industryNarratives.join("\n\n") : "No sector-specific questions completed."}
+
+H. SPONTANEOUS QUESTIONS / LIVE INTERVIEW OBSERVATIONS
+${spontaneousBlock}
+
+I. RED FLAGS OBSERVED
+${redFlags || "None entered"}
+
+J. PRIORITIZED ACTION PLAN
+
+0-30 DAYS (Quick Wins)
+${quickPlan}
+
+31-90 DAYS (Stabilization & Improvement)
+${mediumPlan}
+
+90+ DAYS (Structural Strengthening)
+${longPlan}
+
+K. MANAGEMENT FOCUS AREAS
+1. Improve visibility into revenue, cost, leakage, customer behavior, and margin performance.
+2. Clarify accountability, reporting lines, and management decision ownership.
+3. Standardize execution and reduce process inconsistency across staff and locations.
+4. Install KPI-driven supervision for staff performance, service quality, and conversion efficiency.
+5. Build better sector-specific dashboards so management sees problems early rather than after losses have already accumulated.
+
+L. ACTION ITEMS CAPTURED
+${actionItems.length ? actionItems.join("\n") : "No action items entered."}
+
+M. CLOSING NOTE
+This report is an initial fractional consulting diagnostic intended to support deeper intervention. The next stage should convert findings into a monitored implementation plan with named owners, timelines, measurable KPIs, and recurring review checkpoints.
+      `.trim();
+
+      document.getElementById("reportOutput").textContent = report;
+    }
+
+    function clearAllFields(){
+      document.querySelectorAll("input, textarea, select").forEach(el => {
+        if(el.tagName === "SELECT"){
+          el.selectedIndex = 0;
+        } else {
+          el.value = "";
+        }
+      });
+
+      document.getElementById("industryQuestions").innerHTML = `<p style="color:var(--muted);margin:0;">Select an industry / sector above to load the expanded industry-specific question set.</p>`;
+      document.getElementById("reportOutput").textContent = "Your generated report will appear here after you click “Generate Report”.";
+      document.getElementById("operationalScore").textContent = "--";
+      document.getElementById("commercialScore").textContent = "--";
+      document.getElementById("riskScore").textContent = "--";
+
+      document.getElementById("operationalLabel").className = "pill info";
+      document.getElementById("commercialLabel").className = "pill info";
+      document.getElementById("riskLabel").className = "pill info";
+
+      document.getElementById("operationalLabel").textContent = "Awaiting assessment";
+      document.getElementById("commercialLabel").textContent = "Awaiting assessment";
+      document.getElementById("riskLabel").textContent = "Awaiting assessment";
+
+      renderCoreQuestions();
+    }
+
+    renderCoreQuestions();
+  </script>
 </body>
 </html>
