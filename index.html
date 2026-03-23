@@ -1,173 +1,184 @@
- 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Fractional Consulting Tool</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fractional Consulting Pro Tool</title>
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f172a;
-      color: #fff;
-      padding: 20px;
-    }
+<style>
+body {
+  font-family: Arial;
+  background: #020617;
+  color: #fff;
+  padding: 20px;
+}
 
-    h1 {
-      color: #fbbf24;
-    }
+h1 {
+  color: #fbbf24;
+}
 
-    .card {
-      background: #1e293b;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-    }
+.card {
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
 
-    input, textarea, select {
-      width: 100%;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-    }
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: none;
+}
 
-    button {
-      padding: 10px;
-      background: #fbbf24;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+button {
+  padding: 12px;
+  background: #fbbf24;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    .output {
-      background: #020617;
-      padding: 10px;
-      border-radius: 8px;
-      white-space: pre-wrap;
-    }
-  </style>
+.kpi {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kpi div {
+  background: #0f172a;
+  padding: 10px;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+}
+
+.output {
+  background: #020617;
+  padding: 10px;
+  border-radius: 8px;
+  white-space: pre-wrap;
+}
+</style>
 </head>
 
 <body>
 
-<h1>Fractional Consulting Diagnostic Tool</h1>
+<h1>Fractional Consulting Pro Tool</h1>
 
 <div class="card">
-  <h3>Client Info</h3>
-
-  <input id="client" placeholder="Client Name">
-  <input id="industry" placeholder="Industry">
-  <input id="consultant" placeholder="Consultant Name">
-
-  <textarea id="overview" placeholder="Business Overview"></textarea>
+<h3>Client Info</h3>
+<input id="client" placeholder="Client Name">
+<input id="industry" placeholder="Industry">
+<input id="consultant" placeholder="Consultant Name">
+<textarea id="overview" placeholder="Business Overview"></textarea>
 </div>
 
 <div class="card">
-  <h3>Key Assessment</h3>
-
-  <label>Are financials up to date?</label>
-  <select id="fin">
-    <option>No issue</option>
-    <option>Minor issue</option>
-    <option>Major issue</option>
-  </select>
-
-  <textarea id="fin_notes" placeholder="Notes"></textarea>
-
-  <label>Revenue leakage?</label>
-  <select id="rev">
-    <option>No issue</option>
-    <option>Minor issue</option>
-    <option>Major issue</option>
-  </select>
-
-  <textarea id="rev_notes" placeholder="Notes"></textarea>
-
-  <label>Operational inefficiencies?</label>
-  <select id="ops">
-    <option>No issue</option>
-    <option>Minor issue</option>
-    <option>Major issue</option>
-  </select>
-
-  <textarea id="ops_notes" placeholder="Notes"></textarea>
+<h3>Financial Control</h3>
+<select id="fin">
+<option value="0">No issue</option>
+<option value="1">Minor issue</option>
+<option value="2">Moderate issue</option>
+<option value="3">Major issue</option>
+</select>
+<textarea id="fin_notes" placeholder="Findings"></textarea>
 </div>
 
 <div class="card">
-  <button onclick="generate()">Generate Report</button>
+<h3>Revenue Leakage</h3>
+<select id="rev">
+<option value="0">No issue</option>
+<option value="1">Minor issue</option>
+<option value="2">Moderate issue</option>
+<option value="3">Major issue</option>
+</select>
+<textarea id="rev_notes" placeholder="Findings"></textarea>
 </div>
 
 <div class="card">
-  <h3>Report Output</h3>
-  <div id="output" class="output"></div>
+<h3>Operations</h3>
+<select id="ops">
+<option value="0">No issue</option>
+<option value="1">Minor issue</option>
+<option value="2">Moderate issue</option>
+<option value="3">Major issue</option>
+</select>
+<textarea id="ops_notes" placeholder="Findings"></textarea>
+</div>
+
+<div class="card">
+<button onclick="generate()">Generate Report</button>
+</div>
+
+<div class="kpi">
+<div>Total Score<br><strong id="score">0</strong></div>
+<div>Risk Level<br><strong id="risk">-</strong></div>
+<div>Priority<br><strong id="priority">-</strong></div>
+</div>
+
+<div class="card">
+<h3>Report</h3>
+<div id="output" class="output"></div>
 </div>
 
 <script>
 
-function generate() {
+function generate(){
 
-  let client = document.getElementById("client").value;
-  let industry = document.getElementById("industry").value;
-  let consultant = document.getElementById("consultant").value;
-  let overview = document.getElementById("overview").value;
+let fin = parseInt(document.getElementById("fin").value);
+let rev = parseInt(document.getElementById("rev").value);
+let ops = parseInt(document.getElementById("ops").value);
 
-  let fin = document.getElementById("fin").value;
-  let fin_notes = document.getElementById("fin_notes").value;
+let score = fin + rev + ops;
 
-  let rev = document.getElementById("rev").value;
-  let rev_notes = document.getElementById("rev_notes").value;
+let risk = "Stable";
+let priority = "Low";
 
-  let ops = document.getElementById("ops").value;
-  let ops_notes = document.getElementById("ops_notes").value;
+if(score >= 3) risk = "Moderate";
+if(score >= 6) risk = "High";
+if(score >= 8) risk = "Critical";
 
-  let issues = 0;
+if(score >= 3) priority = "Medium";
+if(score >= 6) priority = "High";
+if(score >= 8) priority = "Immediate";
 
-  if (fin !== "No issue") issues++;
-  if (rev !== "No issue") issues++;
-  if (ops !== "No issue") issues++;
+document.getElementById("score").innerText = score;
+document.getElementById("risk").innerText = risk;
+document.getElementById("priority").innerText = priority;
 
-  let rating = "Stable";
+let actions = "";
 
-  if (issues >= 2) rating = "Moderate";
-  if (issues >= 3) rating = "Critical";
+if(fin > 0) actions += "- Fix financial reporting and controls\n";
+if(rev > 0) actions += "- Plug revenue leakage and tighten pricing\n";
+if(ops > 0) actions += "- Optimize operations and workflows\n";
 
-  let report = `
-CLIENT: ${client}
-INDUSTRY: ${industry}
-CONSULTANT: ${consultant}
+let report = `
+CLIENT: ${document.getElementById("client").value}
 
-OVERVIEW:
-${overview}
+RISK LEVEL: ${risk}
+PRIORITY: ${priority}
 
----
+KEY ACTIONS:
+${actions}
 
-FINDINGS:
+DETAILS:
 
-Financials: ${fin}
-Notes: ${fin_notes}
+Financial:
+${document.getElementById("fin_notes").value}
 
-Revenue: ${rev}
-Notes: ${rev_notes}
+Revenue:
+${document.getElementById("rev_notes").value}
 
-Operations: ${ops}
-Notes: ${ops_notes}
-
----
-
-TOTAL ISSUES: ${issues}
-RISK LEVEL: ${rating}
-
----
-
-RECOMMENDATION:
-Implement structured financial control, tighten revenue capture, and optimize operational workflows.
+Operations:
+${document.getElementById("ops_notes").value}
 `;
 
-  document.getElementById("output").innerText = report;
+document.getElementById("output").innerText = report;
+
 }
 
 </script>
