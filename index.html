@@ -52,6 +52,11 @@ button{
   padding:15px;
   border-radius:10px;
 }
+
+.small{
+  font-size:12px;
+  color:#94a3b8;
+}
 </style>
 </head>
 
@@ -68,12 +73,17 @@ button{
 <select id="industry" onchange="loadQuestions()">
 <option value="">Select</option>
 <option value="hospitality">Hospitality</option>
-<option value="legal">Legal</option>
+<option value="legal">Legal Services</option>
 <option value="retail">Retail</option>
 <option value="healthcare">Healthcare</option>
 <option value="construction">Construction</option>
 <option value="technology">Technology</option>
+<option value="finance">Financial Services</option>
+<option value="education">Education</option>
 </select>
+
+<label>Sub Sector</label>
+<input id="subsector" placeholder="e.g hotel, litigation, pharmacy, ecommerce">
 
 <label>Business Stage</label>
 <select id="stage">
@@ -86,7 +96,7 @@ button{
 </div>
 
 <div class="card">
-<h3>Core Questions</h3>
+<h3>Core Diagnostic</h3>
 
 <label>Financial Control Strength</label>
 <select id="q1">
@@ -109,17 +119,41 @@ button{
 <option value="1">Weak</option>
 </select>
 
+<label>Management Visibility</label>
+<select id="q4">
+<option value="5">Clear</option>
+<option value="3">Partial</option>
+<option value="1">Poor</option>
+</select>
+
 </div>
 
 <div class="card">
-<h3>Industry Questions</h3>
+<h3>Industry Specific Questions</h3>
 <div id="industryQuestions"></div>
+</div>
+
+<div class="card">
+<h3>Consultant Notes</h3>
+
+<label>Red Flags</label>
+<textarea id="redFlags"></textarea>
+
+<label>Quick Wins (0–30 days)</label>
+<textarea id="quickWins"></textarea>
+
+<label>Medium Term (30–90 days)</label>
+<textarea id="mid"></textarea>
+
+<label>Long Term</label>
+<textarea id="long"></textarea>
+
 </div>
 
 <button onclick="generate()">Generate Report</button>
 
 <div class="card">
-<h3>Report</h3>
+<h3>Generated Report</h3>
 <div id="report" class="report"></div>
 </div>
 
@@ -129,32 +163,50 @@ const industryData = {
 
 hospitality:[
 "How well is occupancy tracked?",
-"How controlled is food cost?"
+"How controlled is food cost and wastage?",
+"How strong is guest experience consistency?"
 ],
 
 legal:[
 "How well are billable hours tracked?",
-"How strong is document control?"
+"How strong is document control?",
+"How effective is client conversion?"
 ],
 
 retail:[
 "How well is inventory controlled?",
-"How strong are POS controls?"
+"How strong are POS controls?",
+"How effective is upselling?"
 ],
 
 healthcare:[
 "How efficient is patient flow?",
-"How accurate is billing?"
+"How accurate is billing?",
+"How strong is compliance?"
 ],
 
 construction:[
 "How controlled are project costs?",
-"How strong is site supervision?"
+"How strong is site supervision?",
+"How effective is contractor management?"
 ],
 
 technology:[
-"How reliable is the system?",
-"How strong is customer retention?"
+"How reliable is the system uptime?",
+"How strong is customer retention?",
+"How scalable is infrastructure?"
+],
+
+finance:[
+"How strong are risk controls?",
+"How accurate is reporting?",
+"How compliant are operations?"
+],
+
+education:[
+"How strong is teaching quality control?",
+"How effective is student retention?",
+"How reliable is administration?"
 ]
 
 };
@@ -188,11 +240,13 @@ function generate(){
 
   const name = document.getElementById("clientName").value;
   const industry = document.getElementById("industry").value;
+  const sub = document.getElementById("subsector").value;
 
   let scores = [
     Number(document.getElementById("q1").value),
     Number(document.getElementById("q2").value),
-    Number(document.getElementById("q3").value)
+    Number(document.getElementById("q3").value),
+    Number(document.getElementById("q4").value)
   ];
 
   let industryScores = [];
@@ -213,14 +267,28 @@ function generate(){
   let report = `
 CLIENT: ${name}
 INDUSTRY: ${industry}
+SUB-SECTOR: ${sub}
 
 OVERALL SCORE: ${overall.toFixed(2)}
 STATUS: ${verdict}
 
-RECOMMENDATION:
-- Improve controls
-- Strengthen reporting
-- Optimize operations
+KEY FINDINGS:
+- Operational + financial review completed
+- Industry-specific diagnostics applied
+
+RED FLAGS:
+${document.getElementById("redFlags").value}
+
+ACTION PLAN:
+
+0-30 DAYS:
+${document.getElementById("quickWins").value}
+
+30-90 DAYS:
+${document.getElementById("mid").value}
+
+LONG TERM:
+${document.getElementById("long").value}
 `;
 
   document.getElementById("report").textContent = report;
