@@ -2,20 +2,20 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Fractional Consulting Tool – Action Plan Upgrade</title>
+<title>Fractional Consulting – Commercial Engine</title>
 
 <style>
 body{font-family:Arial;background:#0b1220;color:white;padding:20px;}
 .card{background:#111827;padding:15px;margin-bottom:15px;border-radius:10px;}
-select,textarea,input{width:100%;margin-top:5px;padding:8px;background:#020617;color:white;border:1px solid #475569;}
-button{padding:10px;margin-top:10px;background:#f59e0b;border:none;border-radius:6px;font-weight:bold;}
+select,input{width:100%;padding:8px;margin-top:5px;background:#020617;color:white;border:1px solid #475569;}
+button{padding:12px;background:#f59e0b;border:none;border-radius:6px;font-weight:bold;margin-top:10px;}
 .report{white-space:pre-wrap;background:black;padding:15px;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<h1>Fractional Consulting Tool</h1>
+<h1>Fractional Consulting Diagnostic Engine</h1>
 
 <div class="card">
 <label>Client Name</label>
@@ -24,8 +24,10 @@ button{padding:10px;margin-top:10px;background:#f59e0b;border:none;border-radius
 <label>Industry</label>
 <select id="industry">
 <option>Engineering</option>
-<option>Medical</option>
+<option>Healthcare</option>
 <option>Retail</option>
+<option>Technology</option>
+<option>Hospitality</option>
 </select>
 </div>
 
@@ -41,14 +43,20 @@ button{padding:10px;margin-top:10px;background:#f59e0b;border:none;border-radius
 <label>Receivables</label>
 <select id="q3"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
 
-<label>Staffing</label>
+<label>Operations</label>
 <select id="q4"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
 
-<label>Reporting</label>
+<label>Staffing</label>
 <select id="q5"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
 
-<label>Risk</label>
+<label>Reporting</label>
 <select id="q6"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
+
+<label>Risk</label>
+<select id="q7"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
+
+<label>Sales</label>
+<select id="q8"><option value="5">Strong</option><option value="3">Average</option><option value="1">Weak</option></select>
 
 </div>
 
@@ -63,126 +71,124 @@ button{padding:10px;margin-top:10px;background:#f59e0b;border:none;border-radius
 
 function avg(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
 
-function getAction(q,score){
+// ===== SECTION WEIGHTS =====
+const weights={
+financial:0.25,
+operations:0.20,
+people:0.15,
+reporting:0.15,
+risk:0.15,
+commercial:0.10
+};
+
+// ===== GROUPING =====
+function getSections(){
+return{
+financial:[+q1.value,+q2.value,+q3.value],
+operations:[+q4.value],
+people:[+q5.value],
+reporting:[+q6.value],
+risk:[+q7.value],
+commercial:[+q8.value]
+};
+}
+
+// ===== HEAT MAP =====
+function heat(score){
+if(score<2)return "🔴 Critical";
+if(score<3.5)return "🟠 Weak";
+return "🟢 Strong";
+}
+
+// ===== ACTION ENGINE =====
+function action(name,score){
 if(score>2)return null;
 
-if(q=="Cash Control")return{
-issue:"Weak financial controls",
-impact:"Risk of fraud, leakages and inaccurate reporting",
-action:"Introduce approval limits, reconciliations and segregation of duties",
-priority:"High",
-timeline:"0-30 days"
+return{
+issue:name,
+action:"Implement structured controls and monitoring for "+name,
+priority:score<=1?"Critical":"High"
 };
-
-if(q=="Profit Visibility")return{
-issue:"Poor margin visibility",
-impact:"Hidden losses and pricing inefficiencies",
-action:"Implement margin tracking per product/service",
-priority:"High",
-timeline:"0-30 days"
-};
-
-if(q=="Receivables")return{
-issue:"Weak collections process",
-impact:"Cash flow pressure and bad debts",
-action:"Introduce receivables aging and weekly follow-up discipline",
-priority:"High",
-timeline:"0-30 days"
-};
-
-if(q=="Staffing")return{
-issue:"Weak staffing structure",
-impact:"Low productivity and inconsistency",
-action:"Implement structured hiring and KPI management",
-priority:"Critical",
-timeline:"0-30 days"
-};
-
-if(q=="Reporting")return{
-issue:"Lack of management visibility",
-impact:"Delayed decisions and hidden risks",
-action:"Introduce weekly management dashboard",
-priority:"Critical",
-timeline:"0-30 days"
-};
-
-if(q=="Risk")return{
-issue:"Weak risk management",
-impact:"Exposure to compliance and operational failures",
-action:"Create risk register and monitoring system",
-priority:"High",
-timeline:"30-90 days"
-};
-
-return null;
 }
 
+// ===== REPORT ENGINE =====
 function generate(){
 
-let data=[
-{name:"Cash Control",score:+q1.value},
-{name:"Profit Visibility",score:+q2.value},
-{name:"Receivables",score:+q3.value},
-{name:"Staffing",score:+q4.value},
-{name:"Reporting",score:+q5.value},
-{name:"Risk",score:+q6.value}
-];
+let sections=getSections();
 
-let scores=data.map(x=>x.score);
-let overall=avg(scores);
-
-let status="Moderate";
-if(overall<2)status="Critical";
-else if(overall<3.5)status="Needs Improvement";
-else status="Strong";
-
-// Build action plan
-let actions=data.map(d=>getAction(d.name,d.score)).filter(x=>x);
-
-// categorize
-let immediate=actions.filter(a=>a.timeline=="0-30 days");
-let medium=actions.filter(a=>a.timeline=="30-90 days");
-let long=actions.filter(a=>a.timeline=="90+ days");
-
-function formatActions(list){
-if(!list.length)return "None";
-return list.map((a,i)=>`
-${i+1}. ISSUE: ${a.issue}
-   WHY IT MATTERS: ${a.impact}
-   ACTION: ${a.action}
-   PRIORITY: ${a.priority}
-`).join("\n");
+// weighted score
+let total=0;
+for(let k in sections){
+total+=avg(sections[k])*weights[k];
 }
 
+// section scores
+let sectionScores=Object.keys(sections).map(k=>({
+name:k,
+score:avg(sections[k])
+}));
+
+// strengths & weaknesses
+let strengths=sectionScores.filter(x=>x.score>=4);
+let weaknesses=sectionScores.filter(x=>x.score<=2);
+
+// top issues
+let issues=sectionScores.sort((a,b)=>a.score-b.score).slice(0,5);
+
+// action plan
+let actions=issues.map(i=>action(i.name,i.score)).filter(Boolean);
+
+// ===== REPORT =====
 let report=`
 FRACTIONAL CONSULTING REPORT
 
 Client: ${clientName.value}
+Industry: ${industry.value}
 
 --------------------------------
 
-OVERALL SCORE: ${overall.toFixed(2)}
-STATUS: ${status}
+EXECUTIVE SUMMARY
+The business is currently assessed as ${heat(total)} with an overall score of ${total.toFixed(2)}.
+The structure indicates imbalance between operational performance and management control systems.
 
 --------------------------------
 
-IMMEDIATE ACTION PLAN (0–30 DAYS)
-${formatActions(immediate)}
+SECTION PERFORMANCE
+
+${sectionScores.map(s=>`
+${s.name.toUpperCase()}:
+Score: ${s.score.toFixed(2)} | ${heat(s.score)}
+`).join("")}
 
 --------------------------------
 
-MEDIUM TERM (30–90 DAYS)
-${formatActions(medium)}
+KEY STRENGTHS
+${strengths.map(s=>s.name).join("\n")||"None"}
 
 --------------------------------
 
-STRATEGIC PLAN (90+ DAYS)
-${formatActions(long)}
+KEY WEAKNESSES
+${weaknesses.map(s=>s.name).join("\n")||"None"}
 
 --------------------------------
 
-ADVISORY NOTE
-This action plan is generated based on identified weaknesses and should be implemented with clear ownership and tracking.
+TOP PRIORITY ISSUES
+${issues.map(i=>`${i.name} (${i.score.toFixed(2)})`).join("\n")}
+
+--------------------------------
+
+RECOMMENDED ACTIONS
+${actions.map(a=>`
+ISSUE: ${a.issue}
+ACTION: ${a.action}
+PRIORITY: ${a.priority}
+`).join("\n")}
+
+--------------------------------
+
+BUSINESS IMPLICATION
+Without strengthening weak sections, growth will introduce inefficiencies, risks, and margin erosion.
+
 `;
 
 document.getElementById("report").textContent=report;
