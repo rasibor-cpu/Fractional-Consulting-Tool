@@ -1,197 +1,1593 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Fractional Consulting – Full Commercial System</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fractional Consulting Commercial System</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#111827;
+      --panel-2:#0f172a;
+      --line:#334155;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --gold:#f59e0b;
+      --gold-2:#d4af37;
+      --danger:#ef4444;
+      --warn:#f59e0b;
+      --ok:#22c55e;
+      --secondary:#334155;
+    }
 
-<style>
-body{font-family:Arial;background:#0b1220;color:white;padding:20px;}
-.card{background:#111827;padding:15px;margin-bottom:15px;border-radius:10px;}
-input,select,textarea{width:100%;padding:8px;margin-top:5px;background:#020617;color:white;border:1px solid #475569;}
-button{padding:12px;background:#f59e0b;border:none;border-radius:6px;margin-top:10px;margin-right:10px;}
-.report{white-space:pre-wrap;background:black;padding:15px;border-radius:10px;}
-</style>
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      padding:20px;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    h1,h2,h3{
+      margin-top:0;
+      color:var(--gold);
+    }
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:14px;
+    }
+
+    label{
+      display:block;
+      margin-top:10px;
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:10px;
+      border-radius:8px;
+      border:1px solid #475569;
+      background:#020617;
+      color:var(--text);
+      font-size:14px;
+    }
+
+    textarea{
+      min-height:90px;
+      resize:vertical;
+    }
+
+    button{
+      padding:12px 16px;
+      border:none;
+      border-radius:8px;
+      background:var(--gold);
+      color:#111827;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:10px;
+      margin-right:8px;
+    }
+
+    button.secondary{
+      background:var(--secondary);
+      color:var(--text);
+    }
+
+    button.danger{
+      background:#991b1b;
+      color:#fff;
+    }
+
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .question-block{
+      background:var(--panel-2);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:14px;
+      margin-bottom:12px;
+    }
+
+    .question-title{
+      font-weight:bold;
+      margin-bottom:8px;
+      line-height:1.5;
+    }
+
+    .report{
+      white-space:pre-wrap;
+      background:#020617;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:16px;
+      min-height:240px;
+      line-height:1.65;
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .client-list{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .client-item{
+      background:var(--panel-2);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:12px;
+    }
+
+    .client-meta{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+      margin-top:6px;
+    }
+
+    .client-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+
+    .client-actions button{
+      margin-top:0;
+      padding:8px 12px;
+      font-size:12px;
+    }
+
+    .score-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+    }
+
+    .score-card{
+      background:var(--panel-2);
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:12px;
+    }
+
+    .score-card h4{
+      margin:0 0 8px 0;
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    .critical{background:#7f1d1d;color:#fecaca;}
+    .weak{background:#78350f;color:#fde68a;}
+    .strong{background:#14532d;color:#bbf7d0;}
+
+    .split{
+      display:grid;
+      grid-template-columns:2fr 1fr;
+      gap:16px;
+    }
+
+    @media (max-width: 900px){
+      .split{grid-template-columns:1fr;}
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>Fractional Consulting Commercial Engine</h1>
+  <h1>Fractional Consulting Commercial System</h1>
 
-<div class="card">
-<label>Client Name</label>
-<input id="clientName">
+  <div class="card">
+    <h2>1. Client & Respondent Profile</h2>
+    <div class="grid">
+      <div>
+        <label>Client Name</label>
+        <input id="clientName" placeholder="Enter client or company name" />
+      </div>
+      <div>
+        <label>Unique Client Reference</label>
+        <input id="clientRef" readonly />
+      </div>
+      <div>
+        <label>Respondent Name</label>
+        <input id="respondentName" placeholder="Enter respondent full name" />
+      </div>
+      <div>
+        <label>Respondent Role / Title</label>
+        <input id="respondentRole" placeholder="Enter role or title" />
+      </div>
+      <div>
+        <label>Respondent Department</label>
+        <input id="respondentDept" placeholder="Enter department" />
+      </div>
+      <div>
+        <label>Respondent Email</label>
+        <input id="respondentEmail" placeholder="Enter email" />
+      </div>
+      <div>
+        <label>Respondent Phone</label>
+        <input id="respondentPhone" placeholder="Enter phone number" />
+      </div>
+      <div>
+        <label>Interview Date</label>
+        <input id="interviewDate" type="date" />
+      </div>
+      <div>
+        <label>Consultant Name</label>
+        <input id="consultantName" placeholder="Enter consultant name" />
+      </div>
+      <div>
+        <label>Industry</label>
+        <select id="industry" onchange="loadSubsectors()">
+          <option value="">Select Industry</option>
+          <option value="hospitality">Hospitality</option>
+          <option value="legal">Legal Services</option>
+          <option value="retail">Retail</option>
+          <option value="healthcare">Healthcare / Medical</option>
+          <option value="engineering">Engineering</option>
+          <option value="technology">Technology</option>
+          <option value="construction">Construction / Contracting</option>
+          <option value="education">Education</option>
+          <option value="finance">Financial Services</option>
+          <option value="logistics">Logistics / Transport</option>
+          <option value="manufacturing">Manufacturing</option>
+          <option value="realestate">Real Estate / Property</option>
+          <option value="agriculture">Agriculture / Agro-Allied</option>
+          <option value="entertainment">Entertainment / Creative</option>
+          <option value="nonprofit">Nonprofit / NGO</option>
+          <option value="professionalservices">Professional Services</option>
+        </select>
+      </div>
+      <div>
+        <label>Sub-sector</label>
+        <select id="subsector" onchange="loadSubsectorQuestions()">
+          <option value="">Select Sub-sector</option>
+        </select>
+      </div>
+      <div>
+        <label>Business Stage</label>
+        <select id="stage">
+          <option>Startup</option>
+          <option>Growth</option>
+          <option>Established</option>
+          <option>Stagnant</option>
+          <option>Distressed / Turnaround</option>
+        </select>
+      </div>
+      <div>
+        <label>Business Size</label>
+        <select id="businessSize">
+          <option>1-10 employees</option>
+          <option>11-25 employees</option>
+          <option>26-50 employees</option>
+          <option>51-100 employees</option>
+          <option>100+ employees</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
-<label>Industry</label>
-<select id="industry" onchange="loadSubsectors()">
-<option value="">Select</option>
-<option value="engineering">Engineering</option>
-<option value="medical">Medical</option>
-<option value="retail">Retail</option>
-<option value="technology">Technology</option>
-</select>
+  <div class="split">
+    <div>
+      <div class="card">
+        <h2>2. Core Diagnostics</h2>
+        <div class="small">Financial, operations, people, reporting, risk, and commercial control questions.</div>
+        <div id="coreQuestions" style="margin-top:12px;"></div>
+      </div>
 
-<label>Subsector</label>
-<select id="subsector"></select>
-</div>
+      <div class="card">
+        <h2>3. Sub-sector Specific Diagnostics</h2>
+        <div class="small">Choose Industry, then Sub-sector to load granular questions.</div>
+        <div id="subsectorQuestions" style="margin-top:12px;"></div>
+      </div>
 
-<div class="card" id="questions"></div>
+      <div class="card">
+        <h2>4. Consultant Notes & Manual Actions</h2>
 
-<button onclick="generate()">Generate Report</button>
-<button onclick="saveClient()">Save Client</button>
-<button onclick="downloadPDF()">Download PDF</button>
+        <label>Observed Red Flags</label>
+        <textarea id="redFlags" placeholder="Enter visible weaknesses, leakages, compliance issues, process gaps, reporting failures, customer service breakdowns, margin issues, etc."></textarea>
 
-<div class="card">
-<h3>Report</h3>
-<div id="report" class="report"></div>
-</div>
+        <label>Quick Wins (0-30 days)</label>
+        <textarea id="quickWins" placeholder="Enter immediate actions"></textarea>
 
-<script>
+        <label>Medium-Term Actions (31-90 days)</label>
+        <textarea id="mediumTerm" placeholder="Enter stabilization and improvement actions"></textarea>
 
-// ===== INDUSTRY DATA =====
-const subsectors={
-engineering:["Process Engineering","Mechanical Engineering","Chemical Engineering"],
-medical:["General Practice","Diagnostics","Pharmacy"],
-retail:["Phone Retail","Supermarket","Fashion"],
-technology:["SaaS","IT Support","Data Analytics"]
-};
+        <label>Long-Term Actions (90+ days)</label>
+        <textarea id="longTerm" placeholder="Enter structural recommendations"></textarea>
+      </div>
+    </div>
 
-const questions=[
-"Cash control effectiveness",
-"Profit visibility",
-"Receivables management",
-"Operational efficiency",
-"Staff productivity",
-"Management reporting",
-"Risk management",
-"Sales effectiveness"
-];
+    <div>
+      <div class="card">
+        <h2>5. Scoring Snapshot</h2>
+        <div id="scoreCards" class="score-grid">
+          <div class="score-card"><h4>Financial</h4><div class="small">Generate report to score</div></div>
+          <div class="score-card"><h4>Operations</h4><div class="small">Generate report to score</div></div>
+          <div class="score-card"><h4>People</h4><div class="small">Generate report to score</div></div>
+          <div class="score-card"><h4>Reporting</h4><div class="small">Generate report to score</div></div>
+          <div class="score-card"><h4>Risk</h4><div class="small">Generate report to score</div></div>
+          <div class="score-card"><h4>Commercial</h4><div class="small">Generate report to score</div></div>
+        </div>
+      </div>
 
-// ===== BUILD UI =====
-function loadSubsectors(){
-let ind=industry.value;
-subsector.innerHTML="";
-if(!subsectors[ind])return;
-subsectors[ind].forEach(s=>{
-let o=document.createElement("option");
-o.textContent=s;
-subsector.appendChild(o);
-});
-buildQuestions();
-}
+      <div class="card">
+        <h2>6. Client Record Controls</h2>
+        <div class="toolbar">
+          <button onclick="generateReport()">Generate Report</button>
+          <button onclick="saveClient()">Save Client Record</button>
+          <button onclick="loadClient()">Load Current Reference</button>
+          <button onclick="exportClient()">Export Current JSON</button>
+          <button onclick="downloadPDF()">Download Branded PDF</button>
+          <button onclick="resetForm()" class="secondary">Clear Form</button>
+          <input type="file" id="importFile" onchange="importClient(event)" />
+        </div>
+        <div class="small" style="margin-top:12px;">
+          Each client is stored by unique client reference in local storage. Exported JSON files help keep company records separate.
+        </div>
+      </div>
 
-function buildQuestions(){
-let html="";
-questions.forEach((q,i)=>{
-html+=`
-<label>${q}</label>
-<select id="q${i}">
-<option value="5">Strong</option>
-<option value="3">Average</option>
-<option value="1">Weak</option>
-</select>
-<textarea id="c${i}" placeholder="Comment"></textarea>
-`;
-});
-document.getElementById("questions").innerHTML=html;
-}
+      <div class="card">
+        <h2>7. Saved Client Records</h2>
+        <label>Search Saved Clients</label>
+        <input id="clientSearch" placeholder="Search by client, reference, industry, subsector, respondent" oninput="renderSavedClients()" />
+        <div id="savedClients" class="client-list"></div>
+      </div>
+    </div>
+  </div>
 
-// ===== CORE =====
-function avg(arr){return arr.reduce((a,b)=>a+b,0)/arr.length;}
+  <div class="card">
+    <h2>8. Generated Report</h2>
+    <div id="report" class="report">Your report will appear here.</div>
+  </div>
 
-function heat(s){
-if(s<2)return "🔴 Critical";
-if(s<3.5)return "🟠 Weak";
-return "🟢 Strong";
-}
+  <script>
+    const weights = {
+      financial: 0.25,
+      operations: 0.20,
+      people: 0.15,
+      reporting: 0.15,
+      risk: 0.15,
+      commercial: 0.10
+    };
 
-// ===== ACTION ENGINE =====
-function actionEngine(name,score){
-if(score>2)return null;
+    const coreQuestions = [
+      { section: "financial", question: "How strong are cash controls, approval limits, reconciliations, and segregation of duties?" },
+      { section: "financial", question: "How visible are true gross margins, net margins, and profit leakage points by business line?" },
+      { section: "financial", question: "How effective are receivables tracking, collections discipline, and overdue recovery practices?" },
+      { section: "financial", question: "How disciplined are procurement controls, vendor approvals, and purchase-to-payment processes?" },
+      { section: "operations", question: "How strong are inventory controls, stock counts, shrinkage prevention, and movement reconciliation?" },
+      { section: "operations", question: "How standardized are workflows, SOPs, escalation paths, and service delivery routines?" },
+      { section: "operations", question: "How efficiently are turnaround times, throughput, backlog, and work-in-progress managed?" },
+      { section: "people", question: "How effective are staffing productivity, supervision, accountability, and KPI enforcement?" },
+      { section: "people", question: "How strong are recruitment quality, training, onboarding, and performance management systems?" },
+      { section: "reporting", question: "How clear is management reporting over revenue, cost, service quality, risk, and operating exceptions?" },
+      { section: "commercial", question: "How effective are sales conversion, pricing discipline, retention, and repeat-business generation?" },
+      { section: "risk", question: "How well does the business identify and manage operational, legal, regulatory, and compliance risks?" },
+      { section: "commercial", question: "How strong are customer-service consistency, complaint resolution, and service-recovery processes?" },
+      { section: "reporting", question: "How reliable are technology systems, data quality, dashboards, and decision-support information?" },
+      { section: "operations", question: "How prepared is the business for growth without breakdown in quality, control, cash flow, or execution?" }
+    ];
 
-return{
-issue:name,
-action:"Improve "+name+" through structured controls and monitoring",
-optimization:"Apply cost reduction and efficiency improvements",
-result:"10–25% improvement expected"
-};
-}
+    const industrySubsectors = {
+      hospitality: ["Hotel","Restaurant","Lounge / Bar","Resort","Event Venue","Catering Services"],
+      legal: ["Litigation","Corporate / Commercial","Property / Real Estate","Compliance / Regulatory","Tax","Immigration"],
+      retail: ["Phone Retail","Fashion Retail","Supermarket / Grocery","Pharmacy Retail","Electronics Retail","Auto Parts Retail"],
+      healthcare: [
+        "General Practice","Internal Medicine","Pediatrics","Obstetrics & Gynecology","Surgery","Orthopedics",
+        "Cardiology","Neurology","Nephrology","Ophthalmology / Eye Care","ENT","Dental Practice",
+        "Physiotherapy","Diagnostic Center","Laboratory / Pathology","Pharmacy","Dialysis","Mental Health / Psychiatry",
+        "Home Care","Specialist Clinic","Hospital Administration","General Clinic","Hospital"
+      ],
+      engineering: [
+        "Civil Engineering","Structural Engineering","Mechanical Engineering","Electrical Engineering",
+        "Chemical Engineering","Process Engineering","Processing Engineering","Petroleum Engineering",
+        "Marine Engineering","Industrial Engineering","Production Engineering","Mechatronics Engineering",
+        "Environmental Engineering","Geotechnical Engineering","Materials / Metallurgical Engineering",
+        "Instrumentation & Control Engineering","Power / Energy Engineering","Consulting Engineering",
+        "Maintenance / Reliability Engineering","EPC / Industrial Projects"
+      ],
+      technology: [
+        "SaaS","Software Development","IT Support Services","Cybersecurity","Systems Integration",
+        "Telecom Technology","Hardware / Devices","Cloud Services","Data / Analytics","Managed Services"
+      ],
+      construction: ["Building Construction","Road / Civil Works","MEP Contracting","Project Management","Quantity Surveying","Interior Fit-Out"],
+      education: ["Primary School","Secondary School","College / Tertiary","Training Institute","EdTech","Coaching Center"],
+      finance: ["Microfinance","Commercial Banking Support","Insurance Brokerage","Investment Advisory","Fintech","Credit / Lending"],
+      logistics: ["Trucking","Courier Services","Freight Forwarding","Warehouse Operations","Fleet Management","Last-Mile Delivery"],
+      manufacturing: ["Food Processing","Consumer Goods","Industrial Manufacturing","Chemical Manufacturing","Pharmaceutical Manufacturing","Packaging","Textile / Garment Manufacturing","Plastics Manufacturing"],
+      realestate: ["Property Development","Property Management","Real Estate Brokerage","Facility Management","Short-Let / Hospitality Property"],
+      agriculture: ["Crop Farming","Livestock","Agro-Processing","Poultry","Fisheries","Farm Distribution"],
+      entertainment: ["Events","Music Production","Film / Media","Content Studio","Talent Management","Venue Operations"],
+      nonprofit: ["Foundation","Faith-Based Organization","Development NGO","Advocacy NGO","Education NGO","Health NGO"],
+      professionalservices: ["Accounting Firm","Consulting Firm","Marketing Agency","HR Advisory","Outsourcing Services","Business Support Services"]
+    };
 
-// ===== REPORT =====
-function generate(){
+    const subsectorQuestions = {
+      "Hotel": [
+        { section:"operations", question:"How well are occupancy, average daily rate, RevPAR, and guest satisfaction tracked?" },
+        { section:"operations", question:"How controlled are housekeeping quality, room turnaround, maintenance response, and service standards?" },
+        { section:"financial", question:"How strong are food, beverage, event, and inventory controls across the property?" }
+      ],
+      "Restaurant": [
+        { section:"financial", question:"How tightly are food cost, wastage, pilferage, portion control, and recipe variance managed?" },
+        { section:"operations", question:"How efficient are table turnover, kitchen workflow, service consistency, and order accuracy?" },
+        { section:"financial", question:"How strong are daily cash reconciliation, POS controls, and delivery-platform margin visibility?" }
+      ],
+      "Lounge / Bar": [
+        { section:"financial", question:"How well are beverage stock, pouring controls, shrinkage, and event-night sales tracked?" },
+        { section:"risk", question:"How effective are cash supervision, security, and late-hour operating controls?" },
+        { section:"commercial", question:"How consistent are guest experience, entertainment quality, and repeat-customer conversion?" }
+      ],
+      "Resort": [
+        { section:"commercial", question:"How effectively are accommodation, leisure services, events, and package revenue managed?" },
+        { section:"operations", question:"How strong are staffing utilization, multi-service coordination, and guest-experience controls?" },
+        { section:"commercial", question:"How well are repeat visits, premium sales, and service profitability tracked?" }
+      ],
+      "Event Venue": [
+        { section:"commercial", question:"How well are bookings, deposits, schedules, contracts, and event execution tracked?" },
+        { section:"operations", question:"How efficiently are venue setup, turnaround, and vendor coordination handled?" },
+        { section:"financial", question:"How strong are controls over add-on services, extra billing, and revenue leakage?" }
+      ],
+      "Catering Services": [
+        { section:"financial", question:"How accurately are event costing, pricing, gross margins, and client profitability tracked?" },
+        { section:"operations", question:"How efficient are procurement, food prep, logistics, and delivery timing?" },
+        { section:"operations", question:"How well are spoilage, wastage, event execution quality, and team coordination controlled?" }
+      ],
 
-let scores=[];
-let actions=[];
+      "Litigation": [
+        { section:"operations", question:"How well are matter timelines, court deadlines, filing obligations, and case workflows tracked?" },
+        { section:"reporting", question:"How efficient are file retrieval, document version control, and matter supervision?" },
+        { section:"financial", question:"How strong are billable-hours discipline, fee recovery, and client communication on contentious matters?" }
+      ],
+      "Corporate / Commercial": [
+        { section:"commercial", question:"How efficiently are mandates converted, executed, reviewed, and billed?" },
+        { section:"operations", question:"How strong are contract-review workflows, approvals, and turnaround times?" },
+        { section:"commercial", question:"How well are client relationships converted into repeat commercial instructions?" }
+      ],
+      "Property / Real Estate": [
+        { section:"operations", question:"How well are title searches, closings, documentation, and due diligence managed?" },
+        { section:"risk", question:"How effectively are transaction timelines, risk reviews, and client communication controlled?" },
+        { section:"financial", question:"How strong are fee recovery, document custody, and workflow visibility?" }
+      ],
+      "Compliance / Regulatory": [
+        { section:"risk", question:"How effective are compliance reviews, regulatory advice, and client reporting deadlines managed?" },
+        { section:"reporting", question:"How strong are internal quality review, documentation, and engagement profitability controls?" },
+        { section:"risk", question:"How well are compliance risks identified, escalated, and communicated?" }
+      ],
+      "Tax": [
+        { section:"risk", question:"How accurately are tax filings, timelines, advisory reviews, and client exposures managed?" },
+        { section:"financial", question:"How well are collections, recurring tax-service billing, and retention handled?" },
+        { section:"reporting", question:"How effective is technical review and client communication around tax risks?" }
+      ],
+      "Immigration": [
+        { section:"operations", question:"How strong are document-completeness checks, application workflows, and submission controls?" },
+        { section:"operations", question:"How efficiently are filing timelines, client updates, and case follow-up handled?" },
+        { section:"financial", question:"How well are collections, engagement scope, and service turnaround managed?" }
+      ],
 
-questions.forEach((q,i)=>{
-let val=+document.getElementById("q"+i).value;
-scores.push(val);
+      "Phone Retail": [
+        { section:"operations", question:"How tightly are inventory, branch transfers, shrinkage, and fast-moving stock controlled?" },
+        { section:"commercial", question:"How strong are accessory upsell, warranty conversion, and branch margin visibility?" },
+        { section:"financial", question:"How effective are POS controls, serial-number tracking, and daily stock reconciliation?" }
+      ],
+      "Fashion Retail": [
+        { section:"operations", question:"How effectively are stock rotation, markdowns, inventory aging, and size/color mix managed?" },
+        { section:"commercial", question:"How strong are merchandising, sales conversion, and repeat-customer programs?" },
+        { section:"financial", question:"How clear is branch-level profitability, theft exposure, and stock loss visibility?" }
+      ],
+      "Supermarket / Grocery": [
+        { section:"operations", question:"How tightly are perishables, spoilage, shelf availability, and stock losses controlled?" },
+        { section:"financial", question:"How effective are checkout controls, cash management, and replenishment discipline?" },
+        { section:"commercial", question:"How well are category margins and fast/slow-moving items tracked?" }
+      ],
+      "Pharmacy Retail": [
+        { section:"operations", question:"How well are medicine inventory, expiry controls, and dispensing discipline managed?" },
+        { section:"risk", question:"How strong are regulatory compliance, procurement controls, and margin visibility?" },
+        { section:"commercial", question:"How effectively are repeat prescriptions and customer retention tracked?" }
+      ],
+      "Electronics Retail": [
+        { section:"operations", question:"How well are high-value inventory, damaged goods, warranty claims, and pricing controls managed?" },
+        { section:"commercial", question:"How strong are upsell rates, add-on sales, and financing conversion where applicable?" },
+        { section:"financial", question:"How effectively are promotions, gross margins, and product-category performance tracked?" }
+      ],
+      "Auto Parts Retail": [
+        { section:"operations", question:"How accurately are part-number integrity, stock movement, and supplier sourcing managed?" },
+        { section:"financial", question:"How strong are stock-loss controls, counter-sales discipline, and returns handling?" },
+        { section:"commercial", question:"How well are margins and repeat trade-customer relationships tracked?" }
+      ],
 
-let act=actionEngine(q,val);
-if(act)actions.push(act);
-});
+      "General Practice": [
+        { section:"operations", question:"How efficiently are consultations, triage, records, and appointment management handled?" },
+        { section:"financial", question:"How accurate are billing, collections, and treatment documentation?" },
+        { section:"people", question:"How strong are staffing, patient communication, and service-quality consistency?" }
+      ],
+      "Internal Medicine": [
+        { section:"operations", question:"How effectively are chronic-care reviews, diagnostics, and treatment follow-ups managed?" },
+        { section:"reporting", question:"How strong are documentation quality, test utilization, and billing controls?" },
+        { section:"commercial", question:"How well are patient retention and continuity of care supported?" }
+      ],
+      "Pediatrics": [
+        { section:"operations", question:"How efficiently are appointments, immunizations, growth tracking, and parent communication managed?" },
+        { section:"risk", question:"How strong are records, follow-up compliance, and child-safety procedures?" },
+        { section:"commercial", question:"How well are repeat visits and patient trust sustained?" }
+      ],
+      "Obstetrics & Gynecology": [
+        { section:"operations", question:"How well are antenatal, gynecological, and delivery-related workflows managed?" },
+        { section:"financial", question:"How strong are billing, documentation, and patient scheduling controls?" },
+        { section:"commercial", question:"How effectively are follow-up care, retention, and referral relationships tracked?" }
+      ],
+      "Surgery": [
+        { section:"operations", question:"How efficiently are procedure scheduling, theatre utilization, and pre/post-op workflows managed?" },
+        { section:"risk", question:"How strong are consent, records, billing, and consumables controls?" },
+        { section:"reporting", question:"How well are outcomes, complications, and follow-up processes tracked?" }
+      ],
+      "Orthopedics": [
+        { section:"operations", question:"How well are consultations, imaging coordination, and treatment plans managed?" },
+        { section:"financial", question:"How strong are surgery workflow, implant/inventory controls, and billing accuracy?" },
+        { section:"commercial", question:"How effectively are rehabilitation pathways and follow-up care maintained?" }
+      ],
+      "Cardiology": [
+        { section:"operations", question:"How efficiently are consultations, diagnostics, procedures, and follow-ups managed?" },
+        { section:"financial", question:"How strong are billing controls, diagnostic equipment use, and patient pathway visibility?" },
+        { section:"commercial", question:"How well are retention, outcomes, and referral flows tracked?" }
+      ],
+      "Neurology": [
+        { section:"operations", question:"How well are specialist consultations, investigations, and long-term case management coordinated?" },
+        { section:"reporting", question:"How strong are documentation, scheduling, and billing controls?" },
+        { section:"commercial", question:"How effectively are follow-up adherence and patient continuity tracked?" }
+      ],
+      "Nephrology": [
+        { section:"operations", question:"How effectively are renal consultations, treatment plans, and diagnostic coordination managed?" },
+        { section:"financial", question:"How strong are billing, recurring treatment scheduling, and records discipline?" },
+        { section:"commercial", question:"How well are chronic-patient retention and service continuity handled?" }
+      ],
+      "Ophthalmology / Eye Care": [
+        { section:"operations", question:"How efficiently are consultations, diagnostics, surgeries, and follow-up care managed?" },
+        { section:"financial", question:"How strong are optical sales, procedure billing, and inventory controls?" },
+        { section:"commercial", question:"How well are patient retention and referral flows tracked?" }
+      ],
+      "ENT": [
+        { section:"operations", question:"How effectively are consultations, diagnostics, procedures, and follow-up visits managed?" },
+        { section:"financial", question:"How strong are equipment usage, billing, and records controls?" },
+        { section:"commercial", question:"How well are outcomes and repeat patient engagement tracked?" }
+      ],
+      "Dental Practice": [
+        { section:"operations", question:"How well are appointment scheduling, chair utilization, and treatment conversion tracked?" },
+        { section:"financial", question:"How strong are billing, material usage, sterilization, and patient follow-up routines?" },
+        { section:"commercial", question:"How effectively are repeat visits and preventive-care programs driven?" }
+      ],
+      "Physiotherapy": [
+        { section:"operations", question:"How effectively are sessions booked, delivered, and converted into care plans?" },
+        { section:"people", question:"How strong are therapist utilization and patient retention?" },
+        { section:"commercial", question:"How well are outcomes, billing, and patient compliance monitored?" }
+      ],
+      "Diagnostic Center": [
+        { section:"operations", question:"How efficient are sample processing, test turnaround, and reporting accuracy?" },
+        { section:"operations", question:"How strong are machine utilization, quality control, and consumables management?" },
+        { section:"commercial", question:"How well are referrer relationships and repeat patient flows tracked?" }
+      ],
+      "Laboratory / Pathology": [
+        { section:"operations", question:"How well are sample integrity, turnaround times, and reporting quality controlled?" },
+        { section:"operations", question:"How strong are equipment use, reagent inventory, and internal QC systems?" },
+        { section:"commercial", question:"How effectively are referrer volumes, repeat requests, and billing managed?" }
+      ],
+      "Pharmacy": [
+        { section:"operations", question:"How controlled are prescription handling, expiry, shrinkage, and regulated-drug processes?" },
+        { section:"financial", question:"How strong are supplier management, margin visibility, and stock planning?" },
+        { section:"commercial", question:"How effective are customer service, repeat purchase, and retail conversion routines?" }
+      ],
+      "Dialysis": [
+        { section:"operations", question:"How efficiently are patient scheduling, machine utilization, and recurring care managed?" },
+        { section:"financial", question:"How strong are consumables controls, billing, and treatment records?" },
+        { section:"commercial", question:"How well are service continuity, outcomes, and patient retention tracked?" }
+      ],
+      "Mental Health / Psychiatry": [
+        { section:"operations", question:"How effectively are consultations, therapy sessions, medication management, and follow-up care managed?" },
+        { section:"risk", question:"How strong are documentation, confidentiality, and billing controls?" },
+        { section:"commercial", question:"How well are retention, continuity, and referral pathways maintained?" }
+      ],
+      "Home Care": [
+        { section:"operations", question:"How well are caregiver deployment, scheduling, supervision, and service quality managed?" },
+        { section:"financial", question:"How strong are billing controls, visit documentation, and compliance routines?" },
+        { section:"commercial", question:"How effectively are family communication and retention handled?" }
+      ],
+      "Specialist Clinic": [
+        { section:"operations", question:"How efficiently are specialist visits, diagnostics, and treatment pathways managed?" },
+        { section:"financial", question:"How strong are billing controls, resource use, and reporting visibility?" },
+        { section:"commercial", question:"How well are patient retention and referral relationships sustained?" }
+      ],
+      "Hospital Administration": [
+        { section:"operations", question:"How effectively are admissions, discharge, departmental coordination, and support services managed?" },
+        { section:"financial", question:"How strong are billing, insurer reconciliation, revenue capture, and reporting controls?" },
+        { section:"risk", question:"How well are compliance, incidents, staffing, and service quality monitored?" }
+      ],
+      "General Clinic": [
+        { section:"operations", question:"How efficiently are patient flow, records, and appointment systems managed?" },
+        { section:"financial", question:"How accurate are billing, collections, and treatment documentation?" },
+        { section:"people", question:"How strong are staffing quality and service consistency?" }
+      ],
+      "Hospital": [
+        { section:"operations", question:"How effectively are patient admissions, discharge flow, and departmental coordination managed?" },
+        { section:"financial", question:"How strong are billing controls, insurer reconciliation, and revenue capture?" },
+        { section:"risk", question:"How well are compliance, incident reporting, and care quality monitored?" }
+      ],
 
-let overall=avg(scores);
+      "Civil Engineering": [
+        { section:"financial", question:"How accurately are project costing, BOQ control, and progress billing managed?" },
+        { section:"operations", question:"How strong are site supervision, milestone tracking, and variation control?" },
+        { section:"operations", question:"How effectively are materials, subcontractors, and QA handled?" }
+      ],
+      "Structural Engineering": [
+        { section:"reporting", question:"How strong are design review, approval workflows, and technical-calculation integrity?" },
+        { section:"operations", question:"How effectively are revisions, site coordination, and technical sign-offs controlled?" },
+        { section:"financial", question:"How well are fee recovery and technical-resource utilization managed?" }
+      ],
+      "Mechanical Engineering": [
+        { section:"operations", question:"How well are workshop productivity, maintenance schedules, and job costing tracked?" },
+        { section:"operations", question:"How strong are spare-parts control, downtime management, and technical QA?" },
+        { section:"commercial", question:"How effectively are projects converted into profitable completed jobs?" }
+      ],
+      "Electrical Engineering": [
+        { section:"operations", question:"How strong are installation quality, testing, commissioning, and defect control?" },
+        { section:"operations", question:"How well are material usage, technician deployment, and project timelines managed?" },
+        { section:"financial", question:"How accurately are project margins and change orders tracked?" }
+      ],
+      "Chemical Engineering": [
+        { section:"operations", question:"How well are process efficiency, yield, and loss points monitored?" },
+        { section:"risk", question:"How strong are safety compliance, chemical handling, and quality control systems?" },
+        { section:"financial", question:"How effectively are cost, throughput, and plant performance managed?" }
+      ],
+      "Process Engineering": [
+        { section:"operations", question:"How effectively are process flow, throughput, bottlenecks, and waste reduction managed?" },
+        { section:"operations", question:"How strong are controls around quality consistency, downtime, and operating parameters?" },
+        { section:"financial", question:"How well are process improvements translated into measurable margin gains?" }
+      ],
+      "Processing Engineering": [
+        { section:"operations", question:"How efficiently are raw-material intake, processing stages, and output quality controlled?" },
+        { section:"operations", question:"How strong are equipment performance, wastage controls, and throughput optimization routines?" },
+        { section:"financial", question:"How well are yield losses, rework, and downtime tracked?" }
+      ],
+      "Petroleum Engineering": [
+        { section:"operations", question:"How effectively are field operations, compliance exposure, and safety requirements managed?" },
+        { section:"financial", question:"How strong are vendor controls, logistics planning, and cost visibility?" },
+        { section:"risk", question:"How well are project risks, technical performance, and client deliverables monitored?" }
+      ],
+      "Marine Engineering": [
+        { section:"operations", question:"How well are vessel-related jobs, maintenance cycles, and turnaround times managed?" },
+        { section:"operations", question:"How strong are parts inventory, field-team deployment, and safety discipline?" },
+        { section:"financial", question:"How accurately are marine contracts priced and executed against budget?" }
+      ],
+      "Industrial Engineering": [
+        { section:"operations", question:"How effectively are productivity improvement, plant layout, workflow, and waste reduction managed?" },
+        { section:"operations", question:"How strong are process controls, staffing efficiency, and cost optimization practices?" },
+        { section:"reporting", question:"How well are improvement initiatives tied to measurable performance?" }
+      ],
+      "Production Engineering": [
+        { section:"operations", question:"How well are production scheduling, machine utilization, and output efficiency controlled?" },
+        { section:"operations", question:"How strong are downtime management, defect prevention, and throughput visibility?" },
+        { section:"financial", question:"How effectively are capacity and cost managed against demand?" }
+      ],
+      "Mechatronics Engineering": [
+        { section:"operations", question:"How effectively are integrated mechanical-electrical-control systems maintained and monitored?" },
+        { section:"operations", question:"How strong are troubleshooting, downtime response, and technical support workflows?" },
+        { section:"reporting", question:"How well are project execution and system-performance outcomes tracked?" }
+      ],
+      "Environmental Engineering": [
+        { section:"risk", question:"How well are environmental compliance, waste systems, and sustainability targets managed?" },
+        { section:"reporting", question:"How strong are reporting controls, remediation processes, and risk mitigation routines?" },
+        { section:"commercial", question:"How effectively are technical outputs converted into compliant client outcomes?" }
+      ],
+      "Geotechnical Engineering": [
+        { section:"reporting", question:"How accurately are soil investigations, design inputs, and site recommendations controlled?" },
+        { section:"operations", question:"How strong are reporting quality, site coordination, and technical-review procedures?" },
+        { section:"financial", question:"How well are projects priced, delivered, and recovered financially?" }
+      ],
+      "Materials / Metallurgical Engineering": [
+        { section:"operations", question:"How effectively are material properties, testing, and quality assurance procedures controlled?" },
+        { section:"operations", question:"How strong are process discipline, defect control, and technical reporting routines?" },
+        { section:"financial", question:"How well are yield, waste, and rework managed?" }
+      ],
+      "Instrumentation & Control Engineering": [
+        { section:"operations", question:"How well are control systems, calibration routines, and instrumentation reliability managed?" },
+        { section:"operations", question:"How strong are fault response, maintenance planning, and technical documentation?" },
+        { section:"risk", question:"How effectively are control-related failures prevented and analyzed?" }
+      ],
+      "Power / Energy Engineering": [
+        { section:"operations", question:"How effectively are power systems, maintenance, uptime, and fault response managed?" },
+        { section:"risk", question:"How strong are energy-efficiency controls, technical compliance, and reliability metrics?" },
+        { section:"financial", question:"How well are projects priced, delivered, and supported after commissioning?" }
+      ],
+      "Consulting Engineering": [
+        { section:"commercial", question:"How efficiently are proposals, mandates, and deliverables converted into billings?" },
+        { section:"people", question:"How strong are staff utilization, review processes, and documentation quality?" },
+        { section:"financial", question:"How visible are margins by client, project, and service line?" }
+      ],
+      "Maintenance / Reliability Engineering": [
+        { section:"operations", question:"How well are preventive maintenance, breakdown response, and reliability KPIs managed?" },
+        { section:"operations", question:"How strong are spare-parts planning, maintenance records, and downtime analysis?" },
+        { section:"financial", question:"How effectively are asset-uptime improvements translated into cost savings?" }
+      ],
+      "EPC / Industrial Projects": [
+        { section:"operations", question:"How tightly are procurement, engineering, and construction phases coordinated?" },
+        { section:"financial", question:"How strong are project controls, vendor claims management, and budget visibility?" },
+        { section:"risk", question:"How effectively are delays, overruns, and execution risks managed?" }
+      ],
 
-let report=`
-FRACTIONAL CONSULTING REPORT
+      "SaaS": [
+        { section:"commercial", question:"How well are churn, retention, CAC, and recurring revenue visibility managed?" },
+        { section:"operations", question:"How strong are product uptime, onboarding, support response, and adoption routines?" },
+        { section:"people", question:"How effectively are sales, product, and support teams aligned?" }
+      ],
+      "Software Development": [
+        { section:"operations", question:"How efficient are delivery workflows, sprint discipline, QA, and release management?" },
+        { section:"commercial", question:"How strong are client communication, scope control, and profitability tracking?" },
+        { section:"operations", question:"How well are rework, deployment delays, and technical debt managed?" }
+      ],
+      "IT Support Services": [
+        { section:"operations", question:"How well are ticket resolution, SLA compliance, and recurring service contracts managed?" },
+        { section:"people", question:"How strong are technician productivity and issue-escalation controls?" },
+        { section:"commercial", question:"How effectively are support clients retained and expanded?" }
+      ],
+      "Cybersecurity": [
+        { section:"risk", question:"How strong are incident-response readiness, compliance review, and advisory quality?" },
+        { section:"commercial", question:"How well are engagements scoped, delivered, and billed profitably?" },
+        { section:"commercial", question:"How effectively are client trust, retention, and technical response times managed?" }
+      ],
+      "Systems Integration": [
+        { section:"operations", question:"How efficiently are scoping, deployment, testing, and handover managed?" },
+        { section:"operations", question:"How strong are vendor coordination, implementation quality, and timeline control?" },
+        { section:"financial", question:"How well are project profitability and post-deployment support tracked?" }
+      ],
+      "Telecom Technology": [
+        { section:"operations", question:"How well are activations, deployments, uptime support, and field operations managed?" },
+        { section:"operations", question:"How strong are equipment controls, project delivery, and technical resolution times?" },
+        { section:"commercial", question:"How effectively are service quality and revenue opportunities tracked?" }
+      ],
+      "Hardware / Devices": [
+        { section:"operations", question:"How well are inventory, warranty issues, and support turnaround controlled?" },
+        { section:"financial", question:"How strong are vendor relationships, stock planning, and margin visibility?" },
+        { section:"commercial", question:"How effectively are sales conversion and after-sales support managed?" }
+      ],
+      "Cloud Services": [
+        { section:"operations", question:"How well are uptime, provisioning, billing accuracy, and service-support routines managed?" },
+        { section:"financial", question:"How strong are cost visibility, usage tracking, and margin controls?" },
+        { section:"commercial", question:"How effectively are customer onboarding and retention handled?" }
+      ],
+      "Data / Analytics": [
+        { section:"operations", question:"How effectively are project scoping, data quality, and reporting delivery managed?" },
+        { section:"reporting", question:"How strong are stakeholder alignment, model validation, and commercial recovery?" },
+        { section:"commercial", question:"How well are repeat mandates and insight value tracked?" }
+      ],
+      "Managed Services": [
+        { section:"operations", question:"How well are recurring contracts, SLAs, staffing capacity, and issue resolution controlled?" },
+        { section:"financial", question:"How strong are service profitability, renewals, and client retention routines?" },
+        { section:"reporting", question:"How effectively are support escalation and performance reporting managed?" }
+      ]
+    };
 
-Client: ${clientName.value}
-Industry: ${industry.value}
-Subsector: ${subsector.value}
+    function generateClientRef() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      const rand = String(Math.floor(Math.random() * 9000) + 1000);
+      return `FCT-${y}${m}${day}-${rand}`;
+    }
 
---------------------------------
+    function buildCoreQuestions() {
+      const holder = document.getElementById("coreQuestions");
+      holder.innerHTML = "";
+      coreQuestions.forEach((item, index) => {
+        holder.innerHTML += `
+          <div class="question-block">
+            <div class="question-title">${index + 1}. ${item.question}</div>
+            <div class="small">Section: ${item.section}</div>
+            <label>Rating</label>
+            <select id="core_${index}">
+              <option value="5">Strong</option>
+              <option value="4">Good</option>
+              <option value="3">Average</option>
+              <option value="2">Weak</option>
+              <option value="1">Poor</option>
+            </select>
+            <label>Comment / Evidence</label>
+            <textarea id="core_comment_${index}" placeholder="Enter findings, observations, or evidence"></textarea>
+            <label>Recommended Action</label>
+            <textarea id="core_action_${index}" placeholder="Enter recommended action"></textarea>
+          </div>
+        `;
+      });
+    }
 
-OVERALL SCORE: ${overall.toFixed(2)}
-STATUS: ${heat(overall)}
+    function loadSubsectors() {
+      const industry = document.getElementById("industry").value;
+      const subsectorSelect = document.getElementById("subsector");
+      const subQuestions = document.getElementById("subsectorQuestions");
 
---------------------------------
+      subsectorSelect.innerHTML = `<option value="">Select Sub-sector</option>`;
+      subQuestions.innerHTML = "";
 
-DETAILED ACTION PLAN
+      if (!industry || !industrySubsectors[industry]) return;
 
-${actions.map(a=>`
-ISSUE: ${a.issue}
-ACTION: ${a.action}
-OPTIMIZATION: ${a.optimization}
-EXPECTED RESULT: ${a.result}
-`).join("\n")}
+      industrySubsectors[industry].forEach(item => {
+        const option = document.createElement("option");
+        option.value = item;
+        option.textContent = item;
+        subsectorSelect.appendChild(option);
+      });
+    }
 
---------------------------------
+    function loadSubsectorQuestions() {
+      const subsector = document.getElementById("subsector").value;
+      const holder = document.getElementById("subsectorQuestions");
+      holder.innerHTML = "";
 
-STRATEGIC IMPROVEMENT
+      if (!subsector || !subsectorQuestions[subsector]) {
+        holder.innerHTML = `<div class="small">No sub-sector questions loaded yet.</div>`;
+        return;
+      }
 
-- Cost reduction through efficiency
-- Revenue optimization strategies
-- Better resource utilization
-- Scalable systems implementation
+      subsectorQuestions[subsector].forEach((item, index) => {
+        holder.innerHTML += `
+          <div class="question-block">
+            <div class="question-title">${index + 1}. ${item.question}</div>
+            <div class="small">Section: ${item.section}</div>
+            <label>Rating</label>
+            <select id="sub_${index}">
+              <option value="5">Strong</option>
+              <option value="4">Good</option>
+              <option value="3">Average</option>
+              <option value="2">Weak</option>
+              <option value="1">Poor</option>
+            </select>
+            <label>Comment / Evidence</label>
+            <textarea id="sub_comment_${index}" placeholder="Enter findings, observations, or evidence"></textarea>
+            <label>Recommended Action</label>
+            <textarea id="sub_action_${index}" placeholder="Enter recommended action"></textarea>
+          </div>
+        `;
+      });
+    }
 
---------------------------------
+    function average(arr) {
+      const cleaned = arr.filter(x => !isNaN(x));
+      return cleaned.length ? cleaned.reduce((a,b)=>a+b,0) / cleaned.length : 0;
+    }
 
-EXPECTED BUSINESS IMPACT
+    function collectData() {
+      const subsector = document.getElementById("subsector").value;
 
-- 10–25% revenue growth
-- 5–20% cost reduction
-- Improved operational efficiency
+      const coreData = coreQuestions.map((item, i) => ({
+        section: item.section,
+        question: item.question,
+        rating: document.getElementById(`core_${i}`)?.value || "",
+        comment: document.getElementById(`core_comment_${i}`)?.value || "",
+        action: document.getElementById(`core_action_${i}`)?.value || ""
+      }));
 
-`;
+      const subData = (subsector && subsectorQuestions[subsector])
+        ? subsectorQuestions[subsector].map((item, i) => ({
+            section: item.section,
+            question: item.question,
+            rating: document.getElementById(`sub_${i}`)?.value || "",
+            comment: document.getElementById(`sub_comment_${i}`)?.value || "",
+            action: document.getElementById(`sub_action_${i}`)?.value || ""
+          }))
+        : [];
 
-document.getElementById("report").innerText=report;
+      return {
+        clientName: document.getElementById("clientName").value.trim(),
+        clientRef: document.getElementById("clientRef").value.trim(),
+        respondentName: document.getElementById("respondentName").value.trim(),
+        respondentRole: document.getElementById("respondentRole").value.trim(),
+        respondentDept: document.getElementById("respondentDept").value.trim(),
+        respondentEmail: document.getElementById("respondentEmail").value.trim(),
+        respondentPhone: document.getElementById("respondentPhone").value.trim(),
+        interviewDate: document.getElementById("interviewDate").value,
+        consultantName: document.getElementById("consultantName").value.trim(),
+        industry: document.getElementById("industry").value,
+        subsector: document.getElementById("subsector").value,
+        stage: document.getElementById("stage").value,
+        businessSize: document.getElementById("businessSize").value,
+        redFlags: document.getElementById("redFlags").value.trim(),
+        quickWins: document.getElementById("quickWins").value.trim(),
+        mediumTerm: document.getElementById("mediumTerm").value.trim(),
+        longTerm: document.getElementById("longTerm").value.trim(),
+        coreData,
+        subData,
+        savedAt: new Date().toISOString()
+      };
+    }
 
-}
+    function populateData(data) {
+      document.getElementById("clientName").value = data.clientName || "";
+      document.getElementById("clientRef").value = data.clientRef || generateClientRef();
+      document.getElementById("respondentName").value = data.respondentName || "";
+      document.getElementById("respondentRole").value = data.respondentRole || "";
+      document.getElementById("respondentDept").value = data.respondentDept || "";
+      document.getElementById("respondentEmail").value = data.respondentEmail || "";
+      document.getElementById("respondentPhone").value = data.respondentPhone || "";
+      document.getElementById("interviewDate").value = data.interviewDate || "";
+      document.getElementById("consultantName").value = data.consultantName || "";
+      document.getElementById("industry").value = data.industry || "";
+      loadSubsectors();
+      document.getElementById("subsector").value = data.subsector || "";
+      loadSubsectorQuestions();
+      document.getElementById("stage").value = data.stage || "Startup";
+      document.getElementById("businessSize").value = data.businessSize || "1-10 employees";
+      document.getElementById("redFlags").value = data.redFlags || "";
+      document.getElementById("quickWins").value = data.quickWins || "";
+      document.getElementById("mediumTerm").value = data.mediumTerm || "";
+      document.getElementById("longTerm").value = data.longTerm || "";
 
-// ===== SAVE =====
-function saveClient(){
-localStorage.setItem("client_"+clientName.value,report.innerText);
-alert("Saved");
-}
+      if (Array.isArray(data.coreData)) {
+        data.coreData.forEach((item, i) => {
+          if (document.getElementById(`core_${i}`)) document.getElementById(`core_${i}`).value = item.rating || "3";
+          if (document.getElementById(`core_comment_${i}`)) document.getElementById(`core_comment_${i}`).value = item.comment || "";
+          if (document.getElementById(`core_action_${i}`)) document.getElementById(`core_action_${i}`).value = item.action || "";
+        });
+      }
 
-// ===== PDF =====
-function downloadPDF(){
-let win=window.open('','','width=900,height=700');
-win.document.write("<pre>"+report.innerText+"</pre>");
-win.print();
-}
+      if (Array.isArray(data.subData)) {
+        data.subData.forEach((item, i) => {
+          if (document.getElementById(`sub_${i}`)) document.getElementById(`sub_${i}`).value = item.rating || "3";
+          if (document.getElementById(`sub_comment_${i}`)) document.getElementById(`sub_comment_${i}`).value = item.comment || "";
+          if (document.getElementById(`sub_action_${i}`)) document.getElementById(`sub_action_${i}`).value = item.action || "";
+        });
+      }
 
-</script>
+      generateReport();
+    }
 
+    function heatLabel(score) {
+      if (score < 2) return { text: "🔴 Critical", css: "critical" };
+      if (score < 3.5) return { text: "🟠 Weak", css: "weak" };
+      return { text: "🟢 Strong", css: "strong" };
+    }
+
+    function scoreSections(data) {
+      const combined = [...data.coreData, ...data.subData];
+      const sectionMap = {
+        financial: [],
+        operations: [],
+        people: [],
+        reporting: [],
+        risk: [],
+        commercial: []
+      };
+
+      combined.forEach(item => {
+        const n = Number(item.rating || 0);
+        if (sectionMap[item.section]) sectionMap[item.section].push(n);
+      });
+
+      const scores = {};
+      Object.keys(sectionMap).forEach(k => {
+        scores[k] = average(sectionMap[k]);
+      });
+
+      let weighted = 0;
+      Object.keys(weights).forEach(k => {
+        weighted += (scores[k] || 0) * weights[k];
+      });
+
+      return { sectionScores: scores, overall: weighted };
+    }
+
+    function renderScoreCards(sectionScores) {
+      const holder = document.getElementById("scoreCards");
+      const labels = {
+        financial: "Financial",
+        operations: "Operations",
+        people: "People",
+        reporting: "Reporting",
+        risk: "Risk",
+        commercial: "Commercial"
+      };
+
+      holder.innerHTML = Object.keys(labels).map(k => {
+        const score = sectionScores[k] || 0;
+        const heat = heatLabel(score);
+        return `
+          <div class="score-card">
+            <h4>${labels[k]}</h4>
+            <div><strong>${score ? score.toFixed(2) : "N/A"}</strong></div>
+            <div class="badge ${heat.css}" style="margin-top:8px;">${heat.text}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function getTheme(question) {
+      const q = question.toLowerCase();
+      if (q.includes("cash") || q.includes("margin") || q.includes("receivables") || q.includes("procurement") || q.includes("billing")) return "Financial Control";
+      if (q.includes("inventory") || q.includes("workflow") || q.includes("throughput") || q.includes("turnaround") || q.includes("site") || q.includes("operations") || q.includes("quality")) return "Operations";
+      if (q.includes("staff") || q.includes("recruitment") || q.includes("training") || q.includes("kpi") || q.includes("utilization")) return "People & Performance";
+      if (q.includes("reporting") || q.includes("dashboards") || q.includes("documentation") || q.includes("visibility")) return "Reporting & Visibility";
+      if (q.includes("risk") || q.includes("compliance") || q.includes("regulatory") || q.includes("safety") || q.includes("incident")) return "Risk & Compliance";
+      if (q.includes("sales") || q.includes("pricing") || q.includes("retention") || q.includes("guest") || q.includes("customer") || q.includes("revenue")) return "Commercial";
+      return "General Management";
+    }
+
+    function actionEngine(item, data) {
+      const theme = getTheme(item.question);
+      const userAction = item.action && item.action.trim() ? item.action.trim() : null;
+
+      const plans = {
+        "Financial Control": {
+          issue: "Weak financial control and cost visibility",
+          why: "This can lead to leakages, weak pricing decisions, poor cash discipline, and hidden margin erosion.",
+          actions: [
+            "Implement weekly financial dashboard covering revenue, direct cost, overhead, gross margin, receivables, and exceptions.",
+            "Introduce approval limits and maker-checker review for payments, procurement, and adjustments.",
+            "Track cost per product, project, service line, or client segment to identify leakages clearly.",
+            "Negotiate supplier terms and adopt bulk-purchase policies where demand predictability supports economies of scale."
+          ],
+          optimization: [
+            "Bulk procurement to reduce unit costs.",
+            "Renegotiate supplier contracts and payment terms.",
+            "Eliminate duplicate or low-value expenses.",
+            "Improve inventory and purchasing discipline to reduce avoidable wastage."
+          ],
+          results: [
+            "Expected cost reduction of 5–20% depending on current leakage level.",
+            "Expected margin improvement of 5–15%.",
+            "Improved cash predictability and stronger decision quality."
+          ],
+          timeline: "0-30 days",
+          priority: "High"
+        },
+        "Operations": {
+          issue: "Operational inefficiency and poor resource utilization",
+          why: "This can reduce throughput, delay delivery, waste time and materials, and limit scalability.",
+          actions: [
+            "Map end-to-end workflow and identify the main bottlenecks or rework points.",
+            "Standardize SOPs for critical recurring processes.",
+            "Track turnaround time, downtime, backlog, rework, and output per resource.",
+            "Align labor, tools, systems, and materials more tightly with actual demand."
+          ],
+          optimization: [
+            "Reduce idle time and non-value-adding steps.",
+            "Improve time and resource allocation.",
+            "Increase throughput without equivalent cost growth.",
+            "Use scheduling and capacity planning to improve service consistency."
+          ],
+          results: [
+            "Expected operational efficiency improvement of 15–30%.",
+            "Faster delivery and better use of labor and equipment.",
+            "Reduced operational waste and stronger service consistency."
+          ],
+          timeline: "0-30 days",
+          priority: "High"
+        },
+        "People & Performance": {
+          issue: "Weak staffing structure, accountability, or productivity management",
+          why: "This can produce inconsistent output, management overload, lower productivity, and poor scalability.",
+          actions: [
+            "Define role-by-role KPIs and basic accountability expectations.",
+            "Introduce monthly performance reviews with measurable indicators.",
+            "Improve recruitment filters, onboarding checklists, and training structure.",
+            "Link supervision routines to actual output quality and delivery standards."
+          ],
+          optimization: [
+            "Better use of staff time and skill mix.",
+            "Reduced underperformance and role ambiguity.",
+            "Improved output consistency and team coordination."
+          ],
+          results: [
+            "Expected productivity improvement of 10–25%.",
+            "Reduced management friction and stronger execution discipline.",
+            "Better readiness for scale without quality collapse."
+          ],
+          timeline: "0-30 days",
+          priority: "Critical"
+        },
+        "Reporting & Visibility": {
+          issue: "Poor management reporting and weak decision visibility",
+          why: "This makes problems harder to detect early and weakens strategic, financial, and operational decision-making.",
+          actions: [
+            "Introduce a weekly management dashboard with key financial, operational, risk, and commercial KPIs.",
+            "Define what must be reported daily, weekly, and monthly.",
+            "Create exception reporting for cost spikes, delayed collections, complaints, downtime, or quality failures.",
+            "Strengthen the reliability of underlying data and reporting ownership."
+          ],
+          optimization: [
+            "Faster decision-making.",
+            "Improved management focus on the true problem areas.",
+            "Less dependence on guesswork or delayed information."
+          ],
+          results: [
+            "Improved planning accuracy and faster corrective action.",
+            "Reduced blind spots in the business.",
+            "Better profitability and control decisions over time."
+          ],
+          timeline: "0-30 days",
+          priority: "Critical"
+        },
+        "Risk & Compliance": {
+          issue: "Weak risk management, compliance discipline, or operating safeguards",
+          why: "This can expose the business to legal, operational, safety, or financial losses that are avoidable with better control.",
+          actions: [
+            "Create a simple risk register covering operational, legal, regulatory, safety, and financial risks.",
+            "Assign review ownership and define escalation rules for major exceptions.",
+            "Introduce recurring compliance checks or control tests in the highest-risk areas.",
+            "Document incident handling, approval requirements, and review checkpoints."
+          ],
+          optimization: [
+            "Reduce exposure to disruption, penalties, incidents, or non-compliance.",
+            "Strengthen stability and business continuity.",
+            "Improve management confidence around control effectiveness."
+          ],
+          results: [
+            "Lower unexpected losses and fewer avoidable control failures.",
+            "Improved operating resilience and governance credibility.",
+            "Stronger readiness for growth, audits, or investor scrutiny."
+          ],
+          timeline: "31-90 days",
+          priority: "High"
+        },
+        "Commercial": {
+          issue: "Weak revenue optimization, pricing discipline, or client conversion",
+          why: "This can suppress revenue growth even when operational capacity exists.",
+          actions: [
+            "Review pricing structure, discounting behavior, and actual margin by segment.",
+            "Improve upselling, cross-selling, or repeat-business programs where relevant.",
+            "Track conversion rates, retention, client lifetime value, and service profitability.",
+            "Strengthen customer experience consistency and follow-up discipline."
+          ],
+          optimization: [
+            "Increase revenue per customer.",
+            "Reduce unnecessary discount leakage.",
+            "Use service quality and retention to compound revenue growth."
+          ],
+          results: [
+            "Expected revenue improvement of 10–25% where commercial leakage is material.",
+            "Improved repeat-business generation and stronger client value capture.",
+            "Better monetization of existing operational capacity."
+          ],
+          timeline: "31-90 days",
+          priority: "High"
+        }
+      };
+
+      const base = plans[theme] || plans["Operations"];
+
+      return {
+        issue: userAction ? `${base.issue}. User-specified action noted.` : base.issue,
+        why: base.why,
+        actions: userAction ? [userAction, ...base.actions] : base.actions,
+        optimization: base.optimization,
+        results: base.results,
+        priority: base.priority,
+        timeline: base.timeline,
+        theme
+      };
+    }
+
+    function buildExecutiveSummary(data, overall, statusText, strengths, weaknesses) {
+      let text = `This diagnostic indicates that ${data.clientName || "the business"} is currently in a ${statusText.toLowerCase()} position with an overall weighted score of ${overall.toFixed(2)}. `;
+      if (strengths.length && weaknesses.length) {
+        text += `The business shows identifiable strengths in selected areas, but these are being constrained by weaknesses in control, visibility, or execution discipline. `;
+      } else if (strengths.length) {
+        text += `The assessment suggests a relatively stable operating base with more strengths than immediate weaknesses. `;
+      } else if (weaknesses.length) {
+        text += `The assessment suggests that management systems and control architecture require material strengthening. `;
+      }
+      text += `The priority now is to convert diagnostic findings into practical execution steps that improve profitability, reduce leakage, strengthen visibility, and prepare the business for more sustainable growth.`;
+      return text;
+    }
+
+    function generateReport() {
+      const data = collectData();
+      const combined = [...data.coreData, ...data.subData].map(x => ({
+        ...x,
+        ratingNum: Number(x.rating || 0)
+      })).filter(x => x.ratingNum > 0);
+
+      const { sectionScores, overall } = scoreSections(data);
+      renderScoreCards(sectionScores);
+
+      const heat = heatLabel(overall);
+      const strengths = combined.filter(x => x.ratingNum >= 4.5);
+      const weaknesses = combined.filter(x => x.ratingNum <= 2);
+
+      const issues = [...combined].sort((a, b) => a.ratingNum - b.ratingNum).slice(0, 5);
+      const plans = issues.map(i => ({ item: i, plan: actionEngine(i, data) }));
+
+      const strengthsText = strengths.length
+        ? strengths.slice(0, 6).map((s, i) => `${i+1}. ${s.question}`).join("\n")
+        : "No major strengths were strongly evidenced in the current assessment.";
+
+      const weaknessesText = weaknesses.length
+        ? weaknesses.slice(0, 6).map((w, i) => `${i+1}. ${w.question}`).join("\n")
+        : "No critical low-scoring weaknesses were identified in the current assessment.";
+
+      const issueText = plans.length
+        ? plans.map((entry, i) => `
+${i+1}. ISSUE: ${entry.item.question}
+   THEME: ${entry.plan.theme}
+   SCORE: ${entry.item.ratingNum}
+   WHY IT MATTERS: ${entry.plan.why}
+   RECOMMENDED ACTIONS:
+${entry.plan.actions.map(a => `   - ${a}`).join("\n")}
+   OPTIMIZATION LEVERS:
+${entry.plan.optimization.map(a => `   - ${a}`).join("\n")}
+   EXPECTED RESULTS:
+${entry.plan.results.map(a => `   - ${a}`).join("\n")}
+   PRIORITY: ${entry.plan.priority}
+   TIMELINE: ${entry.plan.timeline}
+        `.trim()).join("\n\n")
+        : "No major priority issues identified.";
+
+      const manualQuick = data.quickWins || "- Tighten visible leakage points.\n- Improve weekly control visibility.\n- Clarify immediate ownership of problem areas.";
+      const manualMedium = data.mediumTerm || "- Formalize reporting cadence.\n- Improve staffing accountability and workflow control.\n- Strengthen commercial and operational discipline.";
+      const manualLong = data.longTerm || "- Build scalable systems, governance, and decision infrastructure.\n- Consolidate gains into permanent management routines.";
+
+      const implication = weaknesses.length
+        ? `Without strengthening the low-scoring areas, the business is likely to face continued leakage, avoidable inefficiency, slower decision-making, and weaker scale readiness.`
+        : `The business appears to have a workable base. The next opportunity is to tighten systems, preserve strengths, and improve monetization of existing capability.`;
+
+      const report = `
+FRACTIONAL CONSULTING DIAGNOSTIC REPORT
+
+CLIENT DETAILS
+Client Name: ${data.clientName || "Not entered"}
+Client Reference: ${data.clientRef || "Not entered"}
+Industry: ${data.industry || "Not selected"}
+Sub-sector: ${data.subsector || "Not selected"}
+Business Stage: ${data.stage || "Not entered"}
+Business Size: ${data.businessSize || "Not entered"}
+
+RESPONDENT DETAILS
+Respondent Name: ${data.respondentName || "Not entered"}
+Role / Title: ${data.respondentRole || "Not entered"}
+Department: ${data.respondentDept || "Not entered"}
+Email: ${data.respondentEmail || "Not entered"}
+Phone: ${data.respondentPhone || "Not entered"}
+Interview Date: ${data.interviewDate || "Not entered"}
+
+CONSULTANT
+${data.consultantName || "Not entered"}
+
+1. EXECUTIVE SUMMARY
+${buildExecutiveSummary(data, overall || 0, heat.text, strengths, weaknesses)}
+
+2. OVERALL ASSESSMENT
+Overall Weighted Score: ${overall ? overall.toFixed(2) : "N/A"}
+Status: ${heat.text}
+
+3. SECTION PERFORMANCE
+Financial: ${sectionScores.financial ? sectionScores.financial.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.financial || 0).text}
+Operations: ${sectionScores.operations ? sectionScores.operations.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.operations || 0).text}
+People: ${sectionScores.people ? sectionScores.people.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.people || 0).text}
+Reporting: ${sectionScores.reporting ? sectionScores.reporting.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.reporting || 0).text}
+Risk: ${sectionScores.risk ? sectionScores.risk.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.risk || 0).text}
+Commercial: ${sectionScores.commercial ? sectionScores.commercial.toFixed(2) : "N/A"} | ${heatLabel(sectionScores.commercial || 0).text}
+
+4. KEY STRENGTHS
+${strengthsText}
+
+5. KEY WEAKNESSES
+${weaknessesText}
+
+6. TOP 5 PRIORITY ISSUES & REMEDIAL ACTION PLAN
+${issueText}
+
+7. BUSINESS TRANSFORMATION FRAMEWORK
+
+COST CONTROL / REDUCTION
+- tighten procurement approvals and cost visibility
+- reduce wastage, shrinkage, rework, and low-value expense lines
+- adopt selective bulk-purchase policy where demand supports economies of scale
+- renegotiate supplier pricing and payment terms where possible
+
+REVENUE OPTIMIZATION
+- improve pricing discipline and reduce unnecessary discount leakage
+- strengthen upselling, cross-selling, repeat business, and client retention
+- improve conversion monitoring and service-profitability visibility
+- monetize current capacity more effectively before adding new cost layers
+
+TIME / RESOURCE MANAGEMENT
+- map workflow bottlenecks and remove non-value-adding steps
+- improve scheduling, staffing allocation, and equipment utilization
+- define service-level timelines and escalate delays early
+- align resource deployment with actual demand and margin contribution
+
+8. BUSINESS IMPLICATIONS
+${implication}
+
+9. OBSERVED RED FLAGS
+${data.redFlags || "None entered"}
+
+10. IMPLEMENTATION ROADMAP
+
+0-30 DAYS
+${manualQuick}
+
+31-90 DAYS
+${manualMedium}
+
+90+ DAYS
+${manualLong}
+
+11. EXPECTED RESULTS AFTER IMPLEMENTATION
+- revenue improvement potential of 10–25% where commercial leakage is material
+- cost reduction potential of 5–20% where waste, weak purchasing, or low visibility is present
+- operational efficiency improvement of 15–30% where process and resource issues are significant
+- stronger management visibility, faster decision-making, and reduced risk exposure
+- better scale readiness without equivalent growth in avoidable inefficiency
+
+12. ADVISORY CONCLUSION
+The business should move next from diagnosis into implementation. The most effective next step is to assign owners, timelines, and review checkpoints to the recommended actions so results can be measured and reinforced.
+      `.trim();
+
+      document.getElementById("report").innerText = report;
+    }
+
+    function getSavedClientKeys() {
+      return Object.keys(localStorage).filter(k => k.startsWith("fct_")).sort();
+    }
+
+    function saveClient() {
+      const data = collectData();
+      if (!data.clientRef) {
+        alert("Client reference missing.");
+        return;
+      }
+      localStorage.setItem(`fct_${data.clientRef}`, JSON.stringify(data));
+      renderSavedClients();
+      alert(`Saved client record: ${data.clientRef}`);
+    }
+
+    function loadClient() {
+      const clientRef = document.getElementById("clientRef").value.trim();
+      if (!clientRef) {
+        alert("Enter or retain a client reference first.");
+        return;
+      }
+      const raw = localStorage.getItem(`fct_${clientRef}`);
+      if (!raw) {
+        alert("No saved record found for this client reference.");
+        return;
+      }
+      populateData(JSON.parse(raw));
+      alert(`Loaded client record: ${clientRef}`);
+    }
+
+    function loadClientByRef(clientRef) {
+      const raw = localStorage.getItem(`fct_${clientRef}`);
+      if (!raw) return;
+      populateData(JSON.parse(raw));
+    }
+
+    function deleteClientByRef(clientRef) {
+      if (!confirm(`Delete saved record ${clientRef}?`)) return;
+      localStorage.removeItem(`fct_${clientRef}`);
+      renderSavedClients();
+      if (document.getElementById("clientRef").value === clientRef) {
+        resetForm();
+      }
+    }
+
+    function exportClient() {
+      const data = collectData();
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${data.clientRef || "client-record"}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function exportClientByRef(clientRef) {
+      const raw = localStorage.getItem(`fct_${clientRef}`);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${clientRef}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function importClient(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!data.clientRef) data.clientRef = generateClientRef();
+          populateData(data);
+          alert("Client file imported successfully.");
+        } catch (err) {
+          alert("Invalid JSON file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetForm() {
+      document.getElementById("clientName").value = "";
+      document.getElementById("respondentName").value = "";
+      document.getElementById("respondentRole").value = "";
+      document.getElementById("respondentDept").value = "";
+      document.getElementById("respondentEmail").value = "";
+      document.getElementById("respondentPhone").value = "";
+      document.getElementById("interviewDate").value = "";
+      document.getElementById("consultantName").value = "";
+      document.getElementById("industry").value = "";
+      document.getElementById("subsector").innerHTML = `<option value="">Select Sub-sector</option>`;
+      document.getElementById("stage").value = "Startup";
+      document.getElementById("businessSize").value = "1-10 employees";
+      document.getElementById("redFlags").value = "";
+      document.getElementById("quickWins").value = "";
+      document.getElementById("mediumTerm").value = "";
+      document.getElementById("longTerm").value = "";
+      document.getElementById("subsectorQuestions").innerHTML = "";
+      document.getElementById("report").innerText = "Your report will appear here.";
+      document.getElementById("clientRef").value = generateClientRef();
+      buildCoreQuestions();
+      document.getElementById("scoreCards").innerHTML = `
+        <div class="score-card"><h4>Financial</h4><div class="small">Generate report to score</div></div>
+        <div class="score-card"><h4>Operations</h4><div class="small">Generate report to score</div></div>
+        <div class="score-card"><h4>People</h4><div class="small">Generate report to score</div></div>
+        <div class="score-card"><h4>Reporting</h4><div class="small">Generate report to score</div></div>
+        <div class="score-card"><h4>Risk</h4><div class="small">Generate report to score</div></div>
+        <div class="score-card"><h4>Commercial</h4><div class="small">Generate report to score</div></div>
+      `;
+    }
+
+    function renderSavedClients() {
+      const holder = document.getElementById("savedClients");
+      const search = document.getElementById("clientSearch").value.trim().toLowerCase();
+      const items = getSavedClientKeys().map(k => {
+        try { return JSON.parse(localStorage.getItem(k)); }
+        catch { return null; }
+      }).filter(Boolean);
+
+      const filtered = items.filter(item => {
+        const hay = [
+          item.clientName || "",
+          item.clientRef || "",
+          item.industry || "",
+          item.subsector || "",
+          item.respondentName || ""
+        ].join(" ").toLowerCase();
+        return hay.includes(search);
+      });
+
+      if (!filtered.length) {
+        holder.innerHTML = `<div class="small">No saved client records found.</div>`;
+        return;
+      }
+
+      holder.innerHTML = filtered.map(item => `
+        <div class="client-item">
+          <strong>${item.clientName || "Unnamed Client"}</strong>
+          <div class="client-meta">
+            Ref: ${item.clientRef || "N/A"}<br>
+            Industry: ${item.industry || "N/A"} | Sub-sector: ${item.subsector || "N/A"}<br>
+            Respondent: ${item.respondentName || "N/A"}<br>
+            Saved: ${item.savedAt ? new Date(item.savedAt).toLocaleString() : "N/A"}
+          </div>
+          <div class="client-actions">
+            <button onclick="loadClientByRef('${item.clientRef}')">Load</button>
+            <button onclick="exportClientByRef('${item.clientRef}')" class="secondary">Export</button>
+            <button onclick="deleteClientByRef('${item.clientRef}')" class="danger">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function esc(s){
+      return String(s)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
+    }
+
+    function downloadPDF() {
+      const content = document.getElementById("report").innerText;
+      const client = document.getElementById("clientName").value || "Client";
+      const sector = document.getElementById("industry").value || "Industry";
+      const today = new Date().toLocaleDateString();
+
+      const win = window.open('', '', 'width=1000,height=800');
+
+      win.document.write(`
+        <html>
+        <head>
+          <title>${esc(client)} - Fractional Consulting Report</title>
+          <style>
+            @page { size: A4; margin: 18mm; }
+            body{font-family:Arial,sans-serif;color:#111;background:#fff;margin:0;}
+            .cover{
+              background:#0b0b0b;color:#d4af37;padding:48px 40px;min-height:220px;
+              border-bottom:6px solid #d4af37;
+            }
+            .brand{font-size:14px;letter-spacing:2px;text-transform:uppercase;margin-bottom:30px;color:#f3d37a;}
+            .title{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:14px;color:#d4af37;}
+            .subtitle{font-size:16px;color:#f5e7b0;line-height:1.5;}
+            .meta{margin-top:28px;font-size:14px;color:#f5e7b0;line-height:1.7;}
+            .content{padding:32px 40px 20px 40px;}
+            .section-head{color:#8a6a00;font-size:18px;font-weight:700;border-bottom:2px solid #d4af37;padding-bottom:6px;margin-top:22px;margin-bottom:12px;}
+            .reportbox{white-space:pre-wrap;line-height:1.65;font-size:14px;}
+            .footer{padding:24px 40px 40px 40px;margin-top:30px;}
+            .sign{margin-top:40px;width:280px;}
+            .signline{border-top:1px solid #333;margin-top:40px;padding-top:8px;font-size:13px;}
+            .small{font-size:12px;color:#555;}
+          </style>
+        </head>
+        <body>
+          <div class="cover">
+            <div class="brand">Fractional Consulting Advisory</div>
+            <div class="title">Business Diagnostic Report</div>
+            <div class="subtitle">Executive assessment, remedial action plan, and implementation-focused advisory output.</div>
+            <div class="meta">
+              <strong>Client:</strong> ${esc(client)}<br>
+              <strong>Industry:</strong> ${esc(sector)}<br>
+              <strong>Date:</strong> ${esc(today)}
+            </div>
+          </div>
+
+          <div class="content">
+            <div class="section-head">Advisory Report</div>
+            <div class="reportbox">${esc(content)}</div>
+          </div>
+
+          <div class="footer">
+            <div class="section-head">Consultant Sign-Off</div>
+            <div class="small">Prepared as a management-use advisory document for execution planning and performance improvement.</div>
+            <div class="sign">
+              <div class="signline">Authorized Consultant Signature</div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `);
+
+      win.document.close();
+      win.focus();
+      win.print();
+    }
+
+    document.getElementById("clientRef").value = generateClientRef();
+    buildCoreQuestions();
+    renderSavedClients();
+  </script>
 </body>
 </html>
